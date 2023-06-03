@@ -1,23 +1,24 @@
+import Categorias.Categoria;
+import Producto.Id;
+import Producto.Producto;
+
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 public class Carrito {
 
     Map<Producto, Integer> carrito;
-    Inventario inventario;
+    Categoria categoria;
 
     public Carrito() {
         carrito = new HashMap<>();
-        inventario = new Inventario();
     }
 
     //Agrega el producto a la lista
     public void agregarProducto(Id id, int cantidad) throws Exception {
-        Producto producto = inventario.buscarProducto(id);
+        Producto producto = categoria.buscarProducto(id);
         if(carrito.containsKey(producto) && (producto.obtenerStock() - cantidad) >= 1) {
             producto.establecerStock(cantidad);
             carrito.put(producto, cantidad);
@@ -26,7 +27,7 @@ public class Carrito {
 
     //TODO realizar comprobaciones
     public void modificarCantidad(Id id, int cantidad) throws Exception {
-        Producto producto = inventario.buscarProducto(id);
+        Producto producto = categoria.buscarProducto(id);
         int anteriorCantidad = obtenerCantidadEnCarro(id);
         if(cantidad < producto.obtenerStock()) {
             carrito.replace(producto, anteriorCantidad, cantidad);
@@ -34,14 +35,14 @@ public class Carrito {
             throw new Exception("Cantidad en stock insuficiente.");
     }
     public void eliminarProductoDelCarrito(Id id) throws Exception {
-        Producto producto = inventario.buscarProducto(id);
+        Producto producto = categoria.buscarProducto(id);
         int cantidad = obtenerCantidadEnCarro(id);
         carrito.remove(producto, cantidad);
     }
 
 
     public int obtenerCantidadEnCarro(Id id) throws Exception {
-        Producto producto = inventario.buscarProducto(id);
+        Producto producto = categoria.buscarProducto(id);
         return (int) carrito.get(producto);
     }
 
@@ -73,14 +74,14 @@ public class Carrito {
         return (calcularSubTotal() - descuento() - calcularIva());
     }
 
+    //TODO Falta acabar el método para registrar la compra
     public void comprar(){
         for(Map.Entry<Producto, Integer> e : carrito.entrySet()) {
-            inventario.modificarStock(e.getKey().obtenerId(), e.getValue());
+            //categoria.restarStock(e.getKey().obtenerId(), e.getValue());
         }
     }
 
     //Primera forma de imprimir el carrito
-    //TODO Falta agregar el método de obtener el nombre en la clase Producto
     public String toString() {
         Producto producto;
 

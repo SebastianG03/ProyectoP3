@@ -1,16 +1,45 @@
-import javax.swing.*;
-import java.util.*;
+import Categorias.*;
+import Producto.*;
 
 public class Inventario {
-    private Set<Producto> conjuntoProductos;
-    private String[] categorias = {"Comida", "Accesorios", "Insumos Médicos"};
-    private String[] especiesMascota = {"Perro", "Gato", "Conejo"};
-    private Integer[][] tablaSegmentos = {{0,0,0},{0,0,0},{0,0,0}};
-    private Integer[][] matrizCantidad = {{0,0,0},{0,0,0},{0,0,0}};
+    private Categoria comida;
+    private Categoria accesorio;
+    private Categoria insMedico;
+    private String[] categorias = {"Comida", "Accesorio", "Insumo Médico"};
     public Inventario(){
-        conjuntoProductos = new TreeSet<>();
+        this.comida = new Comida();
+        this.accesorio = new Accesorio();
+        this.insMedico = new InsMedico();
     }
 
+    public Comida obtenerCatComida(){
+        return (Comida) this.comida;
+    }
+    public Accesorio obtenerCatAccesorio(){
+        return (Accesorio) this.accesorio;
+    }
+    public void agregarProducto(Producto nuevoProducto){
+        if(nuevoProducto instanceof ProductoComida){
+             comida.agregarProducto(nuevoProducto);
+             ((Comida)comida).vectorizarProducto(nuevoProducto);
+        } else if (nuevoProducto instanceof ProductoAccesorio) {
+            accesorio.agregarProducto(nuevoProducto);
+            ((Accesorio)accesorio).vectorizarProducto(nuevoProducto);
+        }
+    }
+
+    @Override
+    public String toString(){
+        return comida.toString() + accesorio.toString() + insMedico.toString();
+    }
+
+
+
+
+
+
+
+    /*
     //OPERACIONES BÁSICAS
     public boolean agregarProducto(Producto p){
         int indiceCategoria = p.obtenerId().obtenerCategoria();
@@ -352,6 +381,7 @@ public class Inventario {
         mostrarTablaProductos(conjuntoProductos.toArray());
         return "\n" + generarTablaSegmentos() + "\n" + generarMatrizCantidad();
     }
+     */
 }
 
 
