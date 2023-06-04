@@ -1,4 +1,4 @@
-package interfaces;
+package InterfacesCarrito;
 
 import javax.swing.*;
 

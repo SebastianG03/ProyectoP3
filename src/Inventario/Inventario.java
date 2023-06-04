@@ -1,5 +1,12 @@
-import Categorias.*;
-import Producto.*;
+package Inventario;
+
+import Producto.Producto;
+import Producto.ProductoAccesorio;
+import Producto.ProductoComida;
+import Inventario.Categoria.Accesorio;
+import Inventario.Categoria.Categoria;
+import Inventario.Categoria.Comida;
+import Inventario.Categoria.InsMedico;
 
 public class Inventario {
     private Categoria comida;

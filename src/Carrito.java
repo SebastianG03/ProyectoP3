@@ -1,4 +1,4 @@
-import Categorias.Categoria;
+import Inventario.Categoria.Categoria;
 import Producto.Id;
 import Producto.Producto;
 

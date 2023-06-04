@@ -1,4 +1,4 @@
-package Categorias;
+package Inventario.Categoria;
 
 import Producto.Id;
 import Producto.Producto;

@@ -1,4 +1,4 @@
-package interfaces.table_action;
+package InterfacesCarrito.table_action;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;

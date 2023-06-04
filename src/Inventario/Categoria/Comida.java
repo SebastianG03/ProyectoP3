@@ -1,11 +1,11 @@
-package Categorias;
+package Inventario.Categoria;
 import Producto.*;
 
 import javax.swing.*;
 import java.util.List;
 import java.util.Random;
 
-public class Comida extends Categoria{
+public class Comida extends Categoria {
     private final String[] MARCA = {"DogChow", "HappyCat"};
     private final String[] FABRICANTE = {"RoyalCanin", "Purina"};
     private final String[] RAZA = {"Todas las razas", "Razas grandes", "Razas medianas", "Razas Pequeñas"};

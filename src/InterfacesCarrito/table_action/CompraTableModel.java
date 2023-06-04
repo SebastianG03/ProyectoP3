@@ -1,16 +1,12 @@
-package interfaces.table_action;
+package InterfacesCarrito.table_action;
+
+import Inventario.Categoria.Categoria;
+import Inventario.Inventario;
 
 import javax.swing.table.AbstractTableModel;
 
 enum Titles {
-    ID,
-    NOMBRE,
-    ESPECIE,
-    PRECIO,
-    DESCUENTO,
-    CALIFICACION,
-    DESCRIPCION,
-    BOTON
+    ID, NOMBRE, ESPECIE, PRECIO, DESCUENTO, CALIFICACION, DESCRIPCION, BOTON
 }
 
 public class CompraTableModel extends AbstractTableModel {
@@ -19,9 +15,13 @@ public class CompraTableModel extends AbstractTableModel {
             Titles.PRECIO.toString(), Titles.DESCUENTO.toString(), Titles.CALIFICACION.toString(),
             Titles.DESCRIPCION.toString(), Titles.BOTON
     };//La última fila es la fila del botón.
+
+    private Categoria categoria;
+    private Inventario inventario;
     private Object[][] rows;
 
-    public CompraTableModel() {
+    public CompraTableModel(Categoria categoria) {
+        this.categoria = categoria;
     }
 
     @Override
