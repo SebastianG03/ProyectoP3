@@ -96,8 +96,8 @@ public abstract class Producto implements Comparable {
     abstract Object[] obtenerAtributosEspecificos();
 
     //METODOS AUXILIARES
-    public void restarStock(){
-        this.stock -= 1;
+    public void restarStock(int cantidad){
+        this.stock -= cantidad;
     }
     public void aumentarUnVendidas(){
         this.unidadesVendidas += 1;

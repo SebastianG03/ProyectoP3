@@ -1,4 +1,4 @@
-package Sistema_de_Compras.ElementosDeSistemaDeCompras.TableModels;
+package SistemaDeCompras.ElementosDeLaInterfazDeCompras.TableModels;
 
 import javax.swing.*;
 public class TableActionCellEditor extends DefaultCellEditor {

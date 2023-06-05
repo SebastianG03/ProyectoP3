@@ -1,12 +1,13 @@
 package Inventario;
 
-import Producto.Producto;
-import Producto.ProductoAccesorio;
-import Producto.ProductoComida;
 import Inventario.Categoria.Accesorio;
 import Inventario.Categoria.Categoria;
 import Inventario.Categoria.Comida;
 import Inventario.Categoria.InsMedico;
+import Producto.Producto;
+import Producto.ProductoAccesorio;
+import Producto.ProductoComida;
+import Producto.ProductoInsMedico;
 
 public class Inventario {
     private Categoria comida;
@@ -23,15 +24,31 @@ public class Inventario {
         return (Comida) this.comida;
     }
     public Accesorio obtenerCatAccesorio(){
+
         return (Accesorio) this.accesorio;
     }
-    public void agregarProducto(Producto nuevoProducto){
-        if(nuevoProducto instanceof ProductoComida){
-             comida.agregarProducto(nuevoProducto);
-             ((Comida)comida).vectorizarProducto(nuevoProducto);
+    public InsMedico obtenerCatInsMedico(){
+        return (InsMedico) this.insMedico;
+    }
+    public void agregarProducto(Producto nuevoProducto) {
+        if (nuevoProducto instanceof ProductoComida) {
+            comida.agregarProducto(nuevoProducto);
+            ((Comida) comida).vectorizarProducto(nuevoProducto);
         } else if (nuevoProducto instanceof ProductoAccesorio) {
             accesorio.agregarProducto(nuevoProducto);
-            ((Accesorio)accesorio).vectorizarProducto(nuevoProducto);
+            ((Accesorio) accesorio).vectorizarProducto(nuevoProducto);
+            } else if (nuevoProducto instanceof ProductoInsMedico) {
+                insMedico.agregarProducto(nuevoProducto);
+            ((InsMedico) insMedico).vectorizarProducto(nuevoProducto);
+        }
+    }
+    public void comprar(Producto nuevoProducto, int cantidad) {
+        if (nuevoProducto instanceof ProductoComida) {
+            comida.restarStock(nuevoProducto.obtenerId(), cantidad);
+        } else if (nuevoProducto instanceof ProductoAccesorio) {
+            accesorio.restarStock(nuevoProducto.obtenerId(), cantidad);
+        } else if (nuevoProducto instanceof ProductoInsMedico) {
+            insMedico.restarStock(nuevoProducto.obtenerId(), cantidad);
         }
     }
 
@@ -39,9 +56,6 @@ public class Inventario {
     public String toString(){
         return comida.toString() + accesorio.toString() + insMedico.toString();
     }
-
-
-
 
 
 

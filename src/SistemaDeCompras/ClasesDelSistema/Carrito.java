@@ -1,21 +1,26 @@
-package Sistema_de_Compras;
+package SistemaDeCompras.ClasesDelSistema;
 
 import Inventario.Categoria.Categoria;
+import Inventario.Inventario;
 import Producto.Id;
 import Producto.Producto;
 
 import java.text.DecimalFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 public class Carrito {
 
-    Map<Producto, Integer> carrito;
-    Categoria categoria;
-
-    public Carrito() {
+    public Date date;
+    public Map<Producto, Integer> carrito;
+    public Categoria categoria;
+    private Inventario inventario;
+    private Usuario usuario;
+    public Carrito(Inventario inventario, Usuario usuario) {
+        this.inventario = inventario;
         carrito = new HashMap<>();
+        this.usuario = usuario;
     }
 
     //Agrega el producto a la lista
@@ -57,15 +62,13 @@ public class Carrito {
         return subtotal;
     }
 
-    private float descuento() {
-        boolean result = false;
-        Random random = new Random();
-        int numeroAleatorio = random.nextInt(100) + 1;
-
-        if (numeroAleatorio == 1) {
-            return (float) (calcularSubTotal() * 0.10);
+    //TODO implementar el descuento del producto
+    public float descuento() {
+        float descuento = 0;
+        for(Map.Entry<Producto, Integer> e : carrito.entrySet()) {
+            descuento += (e.getValue() * e.getKey().obtenerPrecio() * e.getKey().obtenerDescuento());
         }
-        return 0;
+        return descuento;
     }
 
     public float calcularIva(){
@@ -78,8 +81,9 @@ public class Carrito {
 
     //TODO Falta acabar el método para registrar la compra
     public void comprar(){
+        this.date = new Date();
         for(Map.Entry<Producto, Integer> e : carrito.entrySet()) {
-            //categoria.restarStock(e.getKey().obtenerId(), e.getValue());
+            inventario.comprar(e.getKey(), e.getValue());
         }
     }
 
@@ -88,7 +92,7 @@ public class Carrito {
         Producto producto;
 
         StringBuilder sb = new StringBuilder();
-        String titles = String.format("|%s|%3s|%3s|%3s|\n", "Id", "Nombre", "Categoría", "Precio Unitario");
+        String titles = String.format("|%s|%3s|%3s|%3s|\n", "Id", "Nombre", "Cantidad", "Precio Unitario");
         String format = "|%s|%3s|%3s|%3s|%3s|\n";
 
         sb.append(titles);
@@ -105,10 +109,16 @@ public class Carrito {
         return sb.toString();
     }
 
+    //TODO realizar un método para imprimir el precio final con los productos comprados, la fecha y enviar a una lista.
+
     public String imprimirFactura() {
         DecimalFormat numberFormat = new DecimalFormat("#0.00");
         StringBuilder sb = new StringBuilder();
-        String[] datosFactura = {"Subtotal", "Descuento", "Impuestos", "Total"};
+        sb.append("Fecha: ")
+                .append(date.toString())
+                .append("\n");
+
+        String[] datosFactura = {"Nombre", "Correo","Subtotal", "Descuento", "Impuestos", "Total"};
 
         String subTotal = numberFormat.format(calcularSubTotal());
         String descuento = numberFormat.format(descuento());
@@ -116,14 +126,48 @@ public class Carrito {
         String total = numberFormat.format(calcularTotal());
 
         sb.append(
-                String.format("|%s|%5s|\n|%s|%5s|\n|%s|%5s|\n|%s|%5s|\n", datosFactura[0], subTotal,
-                        datosFactura[1], descuento,
-                        datosFactura[2], IVA,
-                        datosFactura[3], total)
+                String.format("|%s|%5s|\n|%s|%5s|\n|%s|%5s|\n|%s|%5s|\n|%s|%5s|\n|%s|%5s|\n",
+                        datosFactura[0], usuario.getNombre(),
+                        datosFactura[1], usuario.getCorreo(),
+                        datosFactura[2], subTotal,
+                        datosFactura[3], descuento,
+                        datosFactura[4], IVA,
+                        datosFactura[5], total)
         );
 
         return sb.toString();
 
 
+    }
+
+    public String imprimirDatosGenerales() {
+        return "Pedido de:" + usuario.getNombre() +
+                "\nCorreo:" + usuario.getCorreo() +
+                "\nFecha:" + date.toString();
+    }
+
+    public String imprimirDatosEspecificos() {
+        Producto producto;
+        DecimalFormat numberFormat = new DecimalFormat("#0.00");
+
+        StringBuilder sb = new StringBuilder();
+        String titles = String.format("|%s|%3s|%3s|\n", "Id", "Nombre", "Cantidad");
+        String format = "|%s|%3s|%3s|\n";
+
+        sb.append(titles);
+
+        //Ingresa los datos del carrito al StringBuilder
+        for(Map.Entry<Producto, Integer> e : carrito.entrySet()) {
+            producto = e.getKey();
+            sb.append(String.format(format, producto.obtenerId().toString(),
+                    producto.obtenerNombre(),
+                    e.getValue()));
+        }
+
+        return "Pedido de:" + usuario.getNombre() +
+                "\nCorreo:" + usuario.getCorreo() +
+                "\nFecha:" + date.toString() +
+                "\n\nContenido del pedido:" + sb +
+                "\n\nCosto total: " + numberFormat.format(calcularTotal());
     }
 }

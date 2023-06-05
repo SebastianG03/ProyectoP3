@@ -1,6 +1,6 @@
-package Sistema_de_Compras.ElementosDeSistemaDeCompras.TableModels;
+package SistemaDeCompras.ElementosDeLaInterfazDeCompras.TableModels;
 
-import Sistema_de_Compras.ElementosDeSistemaDeCompras.EnviarACarritoButton.PanelAction;
+import SistemaDeCompras.ElementosDeLaInterfazDeCompras.EnviarACarritoButton.PanelAction;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;

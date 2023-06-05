@@ -232,12 +232,12 @@ public abstract class Categoria {
             JOptionPane.showMessageDialog(null,ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
         }
     }
-    public void restarStock(Id id){
+    public void restarStock(Id id, int cantidad){
         Object[] arregloProductos = productos.toArray();
         try{
             int indice = busquedaBinaria(arregloProductos, id);
             Producto aModificar = (Producto) arregloProductos[indice];
-            aModificar.restarStock();
+            aModificar.restarStock(cantidad);
         }catch (Exception ex){
             JOptionPane.showMessageDialog(null,ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
         }

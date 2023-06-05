@@ -1,4 +1,4 @@
-package Sistema_de_Compras.ElementosDeSistemaDeCompras.EnviarACarritoButton;
+package SistemaDeCompras.ElementosDeLaInterfazDeCompras.EnviarACarritoButton;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

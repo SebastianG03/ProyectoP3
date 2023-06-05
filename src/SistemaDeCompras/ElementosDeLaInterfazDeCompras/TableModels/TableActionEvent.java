@@ -1,7 +1,7 @@
-package Sistema_de_Compras.ElementosDeSistemaDeCompras.TableModels;
+package SistemaDeCompras.ElementosDeLaInterfazDeCompras.TableModels;
 
 import Producto.Id;
-import Sistema_de_Compras.Carrito;
+import SistemaDeCompras.ClasesDelSistema.Carrito;
 
 public interface TableActionEvent {
 

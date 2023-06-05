@@ -1,25 +1,26 @@
-package Sistema_de_Compras.ElementosDeSistemaDeCompras.TableModels;
+package SistemaDeCompras.ElementosDeLaInterfazDeCompras.TableModels;
 
 import Inventario.Inventario;
 import Producto.ProductoComida;
-import Sistema_de_Compras.ElementosDeSistemaDeCompras.EnviarACarritoButton.PanelAction;
 
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class ComprarComidaTableModel extends DefaultTableModel {
     private static final String[] titles = {
-            "Id", "Nombre", "Sabor", "Especie", "Precio", "Descuento", "Marca",
-            "Tipo", "Calificación", "Descripcion", "Añadir a carrito"
+            "Id", "Nombre",  "Precio", "Marca"
+            , "Calificación", "Cantidad", "Más información" ,"Añadir a carrito"
     };//La última fila es la fila del botón.
 
     private Object[] productos;
-    private final Inventario inventario = new Inventario();
+    private Inventario inventario = new Inventario();;
     private String filtro;
 
-    public ComprarComidaTableModel(ProductoComida producto) {
+    public ComprarComidaTableModel() {
         super(0, titles.length);
-
         this.productos = inventario.obtenerCatComida().obtenerProductos();
         addColumns();
         this.filtro = "Ninguno";
@@ -27,14 +28,20 @@ public class ComprarComidaTableModel extends DefaultTableModel {
     }
 
     private void addColumns() {
+        setColumnCount(0);
         for (String str : titles) {
             super.addColumn(str);
         }
     }
 
     public void generateRows() {
+        setRowCount(0);
+        List<Object> objects = new ArrayList<>();
         for (Object obj : productos) {
-            super.addRow(obtenerAtributosProducto((ProductoComida) obj));
+            objects.add(obtenerAtributosProducto((ProductoComida) obj));
+            objects.add(new JButton());
+            objects.add(new JButton());
+            super.addRow(objects.toArray());
         }
     }
 
@@ -69,19 +76,21 @@ public class ComprarComidaTableModel extends DefaultTableModel {
 
     private Object[] obtenerAtributosProducto(ProductoComida producto) {
         /*
-        *Los atributos se obtendrán en el siguiente orden:  "Id", "Nombre", "Sabor",
-        *  "Especie", "Precio", "Descuento", "Marca",
-        * "Tipo", "Calificación", "Descripcion"
+        *Los atributos se obtendrán en el siguiente orden:  "Id", "Nombre",
+        *  "Precio", "Marca"
+        * , "Calificación"
         * */
-        return new Object[]{producto.obtenerId().toString(), producto.obtenerNombre(),
-                producto.obtenerSabor(), producto.obtenerEspecie(), producto.obtenerPrecio(),
-                producto.obtenerDescuento(), producto.obtenerMarca(), producto.obtenerTipo(),
-                producto.obtenerCalificacion(), producto.obtenerDescripcion(), new PanelAction()};
+        return new Object[]{ producto.obtenerId(), producto.obtenerNombre(), producto.obtenerPrecio(),
+                producto.obtenerMarca(),producto.obtenerCalificacion()};
     }
 
     @Override
     public int getRowCount() {
-        return productos.length;
+        if(this.productos != null) {
+            return productos.length;
+        } else {
+            return 0;
+        }
     }
 
     @Override

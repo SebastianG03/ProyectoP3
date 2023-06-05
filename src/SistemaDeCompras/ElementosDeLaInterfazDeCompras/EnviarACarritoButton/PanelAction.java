@@ -1,8 +1,8 @@
-package Sistema_de_Compras.ElementosDeSistemaDeCompras.EnviarACarritoButton;
+package SistemaDeCompras.ElementosDeLaInterfazDeCompras.EnviarACarritoButton;
 
 import Producto.Id;
-import Sistema_de_Compras.Carrito;
-import Sistema_de_Compras.ElementosDeSistemaDeCompras.TableModels.TableActionEvent;
+import SistemaDeCompras.ClasesDelSistema.Carrito;
+import SistemaDeCompras.ElementosDeLaInterfazDeCompras.TableModels.TableActionEvent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +17,7 @@ public class PanelAction extends Container {
     public PanelAction() {
 
         GroupLayout layout = new GroupLayout(this);
+        //
         this.setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup(GroupLayout.Alignment.LEADING)
