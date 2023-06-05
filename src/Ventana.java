@@ -1,4 +1,4 @@
-import Comida;
+import Inventario.Categoria.*;
 import Inventario.Inventario;
 import Producto.Id;
 import Producto.ProductoComida;

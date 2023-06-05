@@ -4,7 +4,7 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Vector;
 
-public abstract class Producto implements Comparable{
+public abstract class Producto implements Comparable {
     private Id identificador; // atributo con el que se va a trackear el producto en el sistema
     private String nombre;// atributo que se presentará al producto a traves de la interfaz
     private String categoria; // puede ser: comida, accesorio e insumo médico

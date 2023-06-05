@@ -1,3 +1,5 @@
+package Sistema_de_Compras;
+
 import Inventario.Categoria.Categoria;
 import Producto.Id;
 import Producto.Producto;

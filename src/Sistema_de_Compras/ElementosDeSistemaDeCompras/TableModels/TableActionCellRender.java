@@ -1,4 +1,6 @@
-package InterfacesCarrito.table_action;
+package Sistema_de_Compras.ElementosDeSistemaDeCompras.TableModels;
+
+import Sistema_de_Compras.ElementosDeSistemaDeCompras.EnviarACarritoButton.PanelAction;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -9,14 +11,13 @@ public class TableActionCellRender extends DefaultTableCellRenderer {
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         Component com = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        //TODO crear el panel que contiene el botón de añadir al carrito
-        // PanelAction action = new PanelAction();
+        PanelAction action = new PanelAction();
 
         if(!isSelected && row % 2 == 0) {
-            //action.setBackground(Color.WHITE);
+            action.setBackground(Color.WHITE);
         } else {
-            //action.setBackground(com.getBackground());
+            action.setBackground(com.getBackground());
         }
-        return com; //TODO cambiar com por action
+        return action;
         }
 }

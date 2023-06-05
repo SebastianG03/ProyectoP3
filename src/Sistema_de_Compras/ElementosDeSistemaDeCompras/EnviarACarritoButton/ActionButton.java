@@ -1,4 +1,4 @@
-package InterfacesCarrito.table_action;
+package Sistema_de_Compras.ElementosDeSistemaDeCompras.EnviarACarritoButton;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -12,6 +12,7 @@ public class ActionButton extends JButton {
     private boolean mousePress;
 
     public ActionButton() {
+        setText("Añadir a carrito");
         setContentAreaFilled(false);
         setBorder(new EmptyBorder(3, 3, 3, 3));
 
@@ -50,5 +51,4 @@ public class ActionButton extends JButton {
 
         super.paintComponent(g);
     }
-
 }

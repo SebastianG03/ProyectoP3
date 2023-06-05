@@ -1,4 +1,4 @@
-package InterfacesCarrito.table_action;
+package Sistema_de_Compras.ElementosDeSistemaDeCompras.TableModels;
 
 import javax.swing.*;
 public class TableActionCellEditor extends DefaultCellEditor {

@@ -1,4 +1,4 @@
-package InterfacesCarrito;
+package Sistema_de_Compras;
 
 import javax.swing.*;
 

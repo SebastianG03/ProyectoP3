@@ -1,16 +1,20 @@
-package InterfacesCarrito.table_action;
+package Sistema_de_Compras.ElementosDeSistemaDeCompras.EnviarACarritoButton;
+
+import Producto.Id;
+import Sistema_de_Compras.Carrito;
+import Sistema_de_Compras.ElementosDeSistemaDeCompras.TableModels.TableActionEvent;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+//Clase temporal, se intentará utilizar el botón sin el panel.
 public class PanelAction extends Container {
 
     private ActionButton buttonAddToBuy = new ActionButton();
 
     public PanelAction() {
-        buttonAddToBuy.setText("Añadir a carrito");
 
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
@@ -32,11 +36,11 @@ public class PanelAction extends Container {
         );
     }
 
-    public void initEvent(TableActionEvent event, int row) {
+    public void initEvent(TableActionEvent event, int row, Carrito carrito, Id id, int cantidad) {
         buttonAddToBuy.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                event.onAdd(row);
+                event.addToBuy(carrito, id, cantidad);
             }
         });
     }
