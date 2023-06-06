@@ -29,7 +29,7 @@ public class ListaDeCompras {
     }
 
     //Se puede crear un switch en otra funcion para ordenar por producto, si el producto es instanceof Accesorio, Comida, InsMedico.
-    public void ordenarTodosLosProductos(List<Producto> productos, String filtro) {
+    public void ordenarTodosLosProductos(List<Producto> productos, String filtro) { //Se puede añadir la categoria que desea buscar
         Object[] obj = new Object[] {productos};
 
         switch (filtro) {
@@ -52,7 +52,7 @@ public class ListaDeCompras {
             }
         }
     }
-
+/*
     public void ordenarPrecioPorCategoria(Object[] obj) {
 
     }
@@ -68,7 +68,7 @@ public class ListaDeCompras {
     public void ordenarCalificacionPorCategoria(Object[] obj) {
 
     }
-
+*/
     public List<Producto> obtenerTodosLosProductos() {
         List<Producto> list = new ArrayList<>();
         obtenerComidas().forEach(x -> list.add((Producto) x));

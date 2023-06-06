@@ -1,31 +1,28 @@
 package SistemaDeCompras;
 
-import SistemaDeCompras.ElementosDeLaInterfazDeCompras.TableModels.ComprarComidaTableModel;
-
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class VentanaCompra {
     private JPanel panel1;
     private JTabbedPane tabbedPane1;
-    private JTabbedPane tabbedPaneICategorias;
-    private JTable tableInsMedicos;
-    private JTable tableAccesorios;
+    private JTabbedPane tabbedPane2;
+    private JList list1;
+    private JComboBox comboBoxFiltros;
     private JTable tableComida;
     private JButton filtrarButton;
-    private ComprarComidaTableModel tableComidaModel = new ComprarComidaTableModel();
+    private JSpinner spinner1;
+    private JButton añadirACarritoButton;
+    private JList listProductosEnCarro;
+    private JList listProductosDisponiblesPorCategoria;
+    private JComboBox comboBoxCategorias;
+    private JButton filtrarCategoriaButton;
+    private JButton anteriorButton;
+    private JButton siguienteButton;
+    private JButton másInformaciónButton;
 
 
     public VentanaCompra() {
-        tableComida.setModel(tableComidaModel);
-        filtrarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-    }
+           }
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("VentanaCompra");
