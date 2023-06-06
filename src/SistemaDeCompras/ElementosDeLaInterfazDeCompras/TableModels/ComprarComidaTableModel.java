@@ -3,46 +3,49 @@ package SistemaDeCompras.ElementosDeLaInterfazDeCompras.TableModels;
 import Inventario.Inventario;
 import Producto.ProductoComida;
 
-import javax.swing.*;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class ComprarComidaTableModel extends DefaultTableModel {
     private static final String[] titles = {
             "Id", "Nombre",  "Precio", "Marca"
-            , "Calificación", "Cantidad", "Más información" ,"Añadir a carrito"
-    };//La última fila es la fila del botón.
+            , "Calificación", "Opciones"
+    };//La última fila es la fila del botón, la cantidad, y obtener más información del producto.
 
-    private Object[] productos;
     private Inventario inventario = new Inventario();;
+    private Object[] productos;
     private String filtro;
+    private Object[] rowData = new Object[getColumnCount()];
 
     public ComprarComidaTableModel() {
-        super(0, titles.length);
+
         this.productos = inventario.obtenerCatComida().obtenerProductos();
-        addColumns();
+        generateColumns();
+
+        generateRows();
         this.filtro = "Ninguno";
 
     }
 
-    private void addColumns() {
+    public void generateColumns() {
         setColumnCount(0);
         for (String str : titles) {
-            super.addColumn(str);
+            addColumn(str);
         }
     }
 
     public void generateRows() {
         setRowCount(0);
-        List<Object> objects = new ArrayList<>();
-        for (Object obj : productos) {
-            objects.add(obtenerAtributosProducto((ProductoComida) obj));
-            objects.add(new JButton());
-            objects.add(new JButton());
-            super.addRow(objects.toArray());
+        for(int i = 0; i < titles.length; ++i) {
+            setRowCount(getRowCount() - 2);
+            rowData[i] = "Iteracion" + i;
+
         }
+        addRow(rowData);
+//        for (Object obj : productos) {
+//            addRow(obtenerAtributosProducto((ProductoComida) obj));
+//        }
     }
 
     public void filtrarProductos(String filtro) {
@@ -76,12 +79,22 @@ public class ComprarComidaTableModel extends DefaultTableModel {
 
     private Object[] obtenerAtributosProducto(ProductoComida producto) {
         /*
-        *Los atributos se obtendrán en el siguiente orden:  "Id", "Nombre",
-        *  "Precio", "Marca"
-        * , "Calificación"
-        * */
-        return new Object[]{ producto.obtenerId(), producto.obtenerNombre(), producto.obtenerPrecio(),
-                producto.obtenerMarca(),producto.obtenerCalificacion()};
+         *Los atributos se obtendrán en el siguiente orden:  "Id", "Nombre",
+         *  "Precio", "Marca"
+         * , "Calificación"
+         * */
+
+        for(int i = 0; i < titles.length; ++i) {
+            rowData[i] = "Iteracion" + i;
+        }
+//        rowData[0] = producto.obtenerId().toString();
+//        rowData[1] = producto.obtenerNombre();
+//        rowData[2] = producto.obtenerPrecio();
+//        rowData[3] = producto.obtenerMarca();
+//        rowData[4] = producto.obtenerCalificacion();
+//        rowData[5] = "Here is a panel";
+
+        return rowData;
     }
 
     @Override
@@ -95,11 +108,20 @@ public class ComprarComidaTableModel extends DefaultTableModel {
 
     @Override
     public int getColumnCount() {
-        return 8;
+        return titles.length;
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         return null;
+    }
+
+    @Override
+    public boolean isCellEditable(int row, int column) {
+        return false;
+    }
+
+    public void newRowsAdded(TableModelEvent e) {
+        super.newRowsAdded(e);
     }
 }

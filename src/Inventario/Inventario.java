@@ -42,7 +42,7 @@ public class Inventario {
             ((InsMedico) insMedico).vectorizarProducto(nuevoProducto);
         }
     }
-    public void comprar(Producto nuevoProducto, int cantidad) {
+    public void solicitudCompra(Producto nuevoProducto, int cantidad) {
         if (nuevoProducto instanceof ProductoComida) {
             comida.restarStock(nuevoProducto.obtenerId(), cantidad);
         } else if (nuevoProducto instanceof ProductoAccesorio) {

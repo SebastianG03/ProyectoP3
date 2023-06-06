@@ -3,6 +3,8 @@ package SistemaDeCompras;
 import SistemaDeCompras.ElementosDeLaInterfazDeCompras.TableModels.ComprarComidaTableModel;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class VentanaCompra {
     private JPanel panel1;
@@ -11,11 +13,18 @@ public class VentanaCompra {
     private JTable tableInsMedicos;
     private JTable tableAccesorios;
     private JTable tableComida;
+    private JButton filtrarButton;
+    private ComprarComidaTableModel tableComidaModel = new ComprarComidaTableModel();
 
-    private void createUIComponents() {
-        tableComida = new JTable();
-        ComprarComidaTableModel tableModel = new ComprarComidaTableModel();
-        tableComida.setModel(tableModel);
+
+    public VentanaCompra() {
+        tableComida.setModel(tableComidaModel);
+        filtrarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
     }
 
     public static void main(String[] args) {

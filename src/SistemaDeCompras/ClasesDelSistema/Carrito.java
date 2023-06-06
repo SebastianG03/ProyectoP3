@@ -83,7 +83,7 @@ public class Carrito {
     public void comprar(){
         this.date = new Date();
         for(Map.Entry<Producto, Integer> e : carrito.entrySet()) {
-            inventario.comprar(e.getKey(), e.getValue());
+            inventario.solicitudCompra(e.getKey(), e.getValue());
         }
     }
 

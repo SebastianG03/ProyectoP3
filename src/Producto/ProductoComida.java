@@ -74,4 +74,5 @@ public class ProductoComida extends Producto{
         return new Object[] {obtenerId().toString(), this.marca, this.fabricante, this.raza, this.sabor, this.contenedor
                 , this.etapaVida, this.tipo};
     }
+
 }
