@@ -1,3 +1,5 @@
+package SistemaDeCompras;
+
 import Inventario.Categoria.*;
 import Inventario.Inventario;
 import Producto.Id;
@@ -54,7 +56,7 @@ public class Ventana {
     private JButton btnBuscarPComida;
     private JButton btnCancelarBusquedaPComida;
     private JButton btnConsultarPComida;
-    private Inventario inventario = new Inventario();
+    public static Inventario inventario = new Inventario();
     private DefaultTableModel modeloTablaPComida = new DefaultTableModel();
 
     public static void main(String[] args) {

@@ -1,14 +1,12 @@
 package SistemaDeCompras.ClasesDelSistema;
 
-import Inventario.Categoria.Categoria;
+import Inventario.Categoria.*;
 import Inventario.Inventario;
 import Producto.Id;
 import Producto.Producto;
 
 import java.text.DecimalFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Carrito {
 
@@ -17,22 +15,65 @@ public class Carrito {
     public Categoria categoria;
     private Inventario inventario;
     private Usuario usuario;
-    public Carrito(Inventario inventario, Usuario usuario) {
+    private int size;
+    public Carrito(Inventario inventario) {
         this.inventario = inventario;
         carrito = new HashMap<>();
-        this.usuario = usuario;
+        this.usuario = null;
+        this.size = 0;
     }
 
     //Agrega el producto a la lista
-    public void agregarProducto(Id id, int cantidad) throws Exception {
-        Producto producto = categoria.buscarProducto(id);
-        if(carrito.containsKey(producto) && (producto.obtenerStock() - cantidad) >= 1) {
-            producto.establecerStock(cantidad);
-            carrito.put(producto, cantidad);
-        } else throw new Exception("Cantidad de stock insuficiente");
+    public void agregarProductoComida(Id id, int cantidad) throws Exception {
+        Producto producto = inventario.obtenerCatComida().buscarProducto(id);
+        if (producto != null) {
+            int stockActual = producto.obtenerStock();
+
+            if (stockActual >= cantidad) {
+                carrito.put(producto, cantidad);
+                ++size;
+            } else {
+                throw new Exception("Cantidad de stock insuficiente");
+            }
+        } else {
+            throw new Exception("Producto no encontrado");
+        }
     }
 
-    //TODO realizar comprobaciones
+    public void agregarAccesorio(Id id, int cantidad) throws Exception {
+        Producto producto = inventario.obtenerCatComida().buscarProducto(id);
+        if (producto != null) {
+            int stockActual = producto.obtenerStock();
+
+            if (stockActual >= cantidad) {
+                carrito.put(producto, cantidad);
+                ++size;
+            } else {
+                throw new Exception("Cantidad de stock insuficiente");
+            }
+        } else {
+            throw new Exception("Producto no encontrado");
+        }
+
+    }
+    public void agregarInsumos(Id id, int cantidad) throws Exception {
+        Producto producto = inventario.obtenerCatInsMedico().buscarProducto(id);
+        if (producto != null) {
+            int stockActual = producto.obtenerStock();
+
+            if (stockActual >= cantidad) {
+                carrito.put(producto, cantidad);
+                ++size;
+            } else {
+                throw new Exception("Cantidad de stock insuficiente");
+            }
+        } else {
+            throw new Exception("Producto no encontrado");
+        }
+
+    }
+
+
     public void modificarCantidad(Id id, int cantidad) throws Exception {
         Producto producto = categoria.buscarProducto(id);
         int anteriorCantidad = obtenerCantidadEnCarro(id);
@@ -41,16 +82,29 @@ public class Carrito {
         } else
             throw new Exception("Cantidad en stock insuficiente.");
     }
-    public void eliminarProductoDelCarrito(Id id) throws Exception {
-        Producto producto = categoria.buscarProducto(id);
-        int cantidad = obtenerCantidadEnCarro(id);
-        carrito.remove(producto, cantidad);
+
+    public void modificarCantidad(Producto producto, int cantidad) throws Exception {
+        int anteriorCantidad = obtenerCantidadEnCarro(producto);
+        if(cantidad < producto.obtenerStock()) {
+            carrito.replace(producto, anteriorCantidad, cantidad);
+        } else
+            throw new Exception("Cantidad en stock insuficiente.");
     }
 
+    public void eliminarProductoDeCarro(Producto producto) throws Exception {
+        if(getProductos().contains(producto)) {
+            carrito.remove(producto);
+            --size;
+        } else throw new Exception("Producto no encontrado");
+    }
 
     public int obtenerCantidadEnCarro(Id id) throws Exception {
         Producto producto = categoria.buscarProducto(id);
         return (int) carrito.get(producto);
+    }
+
+    public int obtenerCantidadEnCarro(Producto producto) {
+        return carrito.get(producto);
     }
 
 
@@ -62,7 +116,7 @@ public class Carrito {
         return subtotal;
     }
 
-    //TODO implementar el descuento del producto
+
     public float descuento() {
         float descuento = 0;
         for(Map.Entry<Producto, Integer> e : carrito.entrySet()) {
@@ -79,7 +133,6 @@ public class Carrito {
         return (calcularSubTotal() - descuento() - calcularIva());
     }
 
-    //TODO Falta acabar el método para registrar la compra
     public void comprar(){
         this.date = new Date();
         for(Map.Entry<Producto, Integer> e : carrito.entrySet()) {
@@ -87,7 +140,6 @@ public class Carrito {
         }
     }
 
-    //Primera forma de imprimir el carrito
     public String toString() {
         Producto producto;
 
@@ -109,7 +161,6 @@ public class Carrito {
         return sb.toString();
     }
 
-    //TODO realizar un método para imprimir el precio final con los productos comprados, la fecha y enviar a una lista.
 
     public String imprimirFactura() {
         DecimalFormat numberFormat = new DecimalFormat("#0.00");
@@ -140,6 +191,22 @@ public class Carrito {
 
     }
 
+    public Map<Producto, Integer> getCarroDeCompras() {
+        return carrito;
+    }
+
+
+
+    public List<Producto> getProductos() {
+        List<Producto> productos = new ArrayList<>();
+        for(Map.Entry<Producto, Integer> e : carrito.entrySet()) {
+            productos.add(e.getKey());
+        }
+        return productos;
+    }
+
+
+
     public String imprimirDatosGenerales() {
         return "Pedido de:" + usuario.getNombre() +
                 "\nCorreo:" + usuario.getCorreo() +
@@ -168,6 +235,12 @@ public class Carrito {
                 "\nCorreo:" + usuario.getCorreo() +
                 "\nFecha:" + date.toString() +
                 "\n\nContenido del pedido:" + sb +
-                "\n\nCosto total: " + numberFormat.format(calcularTotal());
+                "\n\nCosto total: " + numberFormat.format(calcularTotal()) + "\n";
+
+
+    }
+
+    public int size() {
+        return size;
     }
 }

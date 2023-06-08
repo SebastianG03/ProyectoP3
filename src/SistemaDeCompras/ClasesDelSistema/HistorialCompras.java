@@ -1,6 +1,9 @@
 package SistemaDeCompras.ClasesDelSistema;
+import Producto.Producto;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class HistorialCompras {
     List<Carrito> paquetesNuevos;
@@ -21,6 +24,18 @@ public class HistorialCompras {
     public void agregarHistorialEnviados(Carrito carrito){
         paquetesEnviados.add(carrito);
     }
+
+    public String imprimirPaquetesNuevos() {
+        StringBuilder sb = new StringBuilder();
+        paquetesNuevos.stream().map(x -> sb.append(x.toString()));
+        return sb.toString();
+    }
+    public String imprimirPaquetesEnviados() {
+        StringBuilder sb = new StringBuilder();
+        paquetesEnviados.stream().map(x -> sb.append(x.toString()));
+        return sb.toString();
+    }
+
 
 
 }

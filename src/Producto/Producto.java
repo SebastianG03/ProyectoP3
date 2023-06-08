@@ -132,8 +132,6 @@ public abstract class Producto implements Comparable {
                 Nombre: %s\n
                 Precio: $ %s\n
                 Descuento: %s\n
-                Stock: %s\n
-                Unidades vendidas %s\n
-                Calificacion: %s""",nombre,precio,descuento*100 + "%",stock,unidadesVendidas,calificacion);
+                s""",nombre,precio,descuento*100 + "%",stock);
     }
 }

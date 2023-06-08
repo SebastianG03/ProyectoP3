@@ -52,6 +52,7 @@ public class Inventario {
         }
     }
 
+
     @Override
     public String toString(){
         return comida.toString() + accesorio.toString() + insMedico.toString();
