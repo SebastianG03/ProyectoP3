@@ -1,9 +1,8 @@
-package SistemaDeCompras;
-
 import Inventario.Inventario;
 import Producto.Producto;
 import SistemaDeCompras.ClasesDelSistema.Carrito;
 import SistemaDeCompras.ClasesDelSistema.Filtros;
+import SistemaDeCompras.ClasesDelSistema.HistorialCompras;
 import SistemaDeCompras.DocumentFilter.FilterFormat;
 import Producto.*;
 import javax.swing.*;
@@ -11,7 +10,6 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
-import java.util.concurrent.Flow;
 
 public class VentanaCompra {
     private JPanel panel1;
@@ -66,8 +64,9 @@ public class VentanaCompra {
     private JTextField textFieldProducto0;
     private JTextField txtIngresarIdCarrito;
     private JButton btnEliminar;
-    private JButton comprarButton;
     private JTextArea textAreaFactura;
+    private JButton comprarButton;
+    private JTextArea textAreaHistorialDeCompras;
     private DefaultTableModel modeloTabla = new DefaultTableModel() {
         @Override
         public boolean isCellEditable(int row, int column) {
@@ -76,6 +75,7 @@ public class VentanaCompra {
     };
     private Carrito carrito = new Carrito(new Inventario());
     private Filtros filtroTable = new Filtros();
+    private HistorialCompras historialCompras = new HistorialCompras();
     List<Producto> productosEnCarro = new ArrayList<>();
     private DefaultListModel<String> listModel = new DefaultListModel<>();
     private List<JTextField> textFieldProductosCompras = Arrays.asList(textFieldProducto0, textFieldProducto1, textFieldProducto2,
@@ -144,9 +144,8 @@ public class VentanaCompra {
                 }
 
                 listModel.clear(); // Se restablece el contenido del DefaultListModel antes de agregar los nuevos elementos
-                for (Map.Entry<Producto, Integer> entry : carrito.carrito.entrySet()) {
-                    listModel.addElement(entry.toString() + " Cantidad: " + spinnerCantidadP.getValue().toString());
-                }
+                listModel.addElement(carrito.getProductos().get(carrito.size() - 1).obtenerNombre() + " Cantidad: " + spinnerCantidadP.getValue().toString());
+
                 listProductosEnCarro.setModel(listModel);
             }
 
@@ -319,13 +318,8 @@ public class VentanaCompra {
                 }
             }
         });
-        comprarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                carrito.comprar();
-                JOptionPane.showMessageDialog(null, "Gracias por su patrocinio!\n" + carrito.imprimirFactura());
-            }
-        });
+
+
         másInformacionButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -333,6 +327,7 @@ public class VentanaCompra {
                 try {
                     Producto producto = filtroTable.buscarProductoPorId(new Id(id));
                     String datos;
+
                     datos = (producto instanceof ProductoAccesorio)? obtenerDatosAccesorios(producto) :
                             (producto instanceof ProductoInsMedico)? obtenerDatosMedicamentos(producto) :
                                     obtenerDatosComida(producto);
@@ -342,14 +337,17 @@ public class VentanaCompra {
                 }
             }
         });
-    }
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("VentanaCompra");
-        frame.setContentPane(new VentanaCompra().panel1);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
+
+        comprarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                historialCompras.agregarHistorialCarrito(carrito);
+                carrito.comprar();
+                textAreaHistorialDeCompras.setText(historialCompras.imprimirPaquetesNuevos());
+                JOptionPane.showMessageDialog(null, "Gracias por su patrocinio!\n" + carrito.imprimirFactura());
+            }
+        });
     }
 
     public void inicializarTabla(){
@@ -401,18 +399,11 @@ public class VentanaCompra {
     }
 
     public String obtenerDatosAccesorios(Producto producto) {
-        String accesorioFormat = """
-                        Nombre: %s
-                        Especie: %s
-                        Precio: %.02f
-                        Descuento: %.02f
-                        Marca: %s
-                        Fabricante: %s
-                        Tipo: %s
-                        Para: %s
-                        Calificación: %d
-                        Descripción: %d
-                        """;
+        String accesorioFormat = "Nombre: %s\n" + "Especie: %s\n" + "Precio: %.2f\n" +
+                "Descuento: %.2f\n" + "Marca: %s\n" + "Fabricante: %s\n" +
+                "Tipo: %s\n" + "Para: %s\n" + "Calificación: %d\n" +
+                "Descripción: %d\n";
+
         ProductoAccesorio p = (ProductoAccesorio) producto;
         return String.format(accesorioFormat, p.obtenerNombre(), p.obtenerEspecie(), p.obtenerPrecio(),
                 p.obtenerDescuento(), p.obtenerMarca(), p.obtenerFabricante(), p.obtenerTipo(),
@@ -420,17 +411,10 @@ public class VentanaCompra {
     }
 
     public String obtenerDatosMedicamentos(Producto producto) {
-        String insMedicoFormat = """
-                        Nombre: %s
-                        Especie: %s
-                        Precio: %.02f
-                        Descuento: %.02f
-                        Marca: %s
-                        Fabricante: %s
-                        Tipo: %s\s
-                        Calificación: %d
-                        Descripción: %d
-                        """;
+        String insMedicoFormat = "Nombre: %s\n" + "Especie: %s\n" + "Precio: %.2f\n" +
+                "Descuento: %.2f\n" + "Marca: %s\n" + "Fabricante: %s\n" +
+                "Tipo: %s \n" + "Calificación: %d\n" + "Descripción: %d\n";
+
 
         ProductoInsMedico p = (ProductoInsMedico) producto;
         return String.format(insMedicoFormat, p.obtenerNombre(), p.obtenerEspecie(), p.obtenerPrecio(),
@@ -439,21 +423,12 @@ public class VentanaCompra {
     }
 
     public String obtenerDatosComida(Producto producto) {
-        String comidaFormat = """
-                        Nombre: %s
-                        Especie: %s
-                        Precio: %.02f
-                        Descuento: %.02f
-                        Marca: %s
-                        Fabricante: %s
-                        Raza: %s
-                        Sabor: %s
-                        Contenedor: %s
-                        Para: %s
-                        Tipo: %s\s
-                        Calificación: %d
-                        Descripción: %d
-                        """;
+        String comidaFormat = "Nombre: %s\n" + "Especie: %s\n" + "Precio: %.2f\n" +
+                "Descuento: %.2f\n" + "Marca: %s\n" + "Fabricante: %s\n" +
+                "Raza: %s\n" + "Sabor: %s\n" + "Contenedor: %s\n" + "Para: %s\n" +
+                "Tipo: %s \n" + "Calificación: %d\n" + "Descripción: %d\n";
+
+
         ProductoComida p = (ProductoComida) producto;
         return String.format(comidaFormat, p.obtenerNombre(), p.obtenerEspecie(), p.obtenerPrecio(),
                 p.obtenerDescuento(), p.obtenerMarca(), p.obtenerFabricante(), p.obtenerRaza(), p.obtenerSabor(),
@@ -461,6 +436,11 @@ public class VentanaCompra {
 
     }
 
-
-
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("VentanaCompra");
+        frame.setContentPane(new VentanaCompra().panel1);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
+    }
 }

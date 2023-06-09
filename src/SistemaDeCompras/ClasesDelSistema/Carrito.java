@@ -157,6 +157,7 @@ public class Carrito {
         for(Map.Entry<Producto, Integer> e : carrito.entrySet()) {
             inventario.solicitudCompra(e.getKey(), e.getValue());
         }
+        carrito.clear();
     }
 
     public String toString() {
@@ -182,7 +183,7 @@ public class Carrito {
 
 
     public String imprimirFactura() {
-        DecimalFormat numberFormat = new DecimalFormat("#0.00");
+        DecimalFormat numberFormat = new DecimalFormat("##.##");
         StringBuilder sb = new StringBuilder();
         date = new Date();
         sb.append("Fecha: ")
