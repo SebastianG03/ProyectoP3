@@ -9,13 +9,13 @@ public class Id {
     }
     public Id(String identificador) throws Exception{
         char[] digitos = identificador.toCharArray();
-        if(digitos.length==4){ //Controla que la ID del producto cuente con solo 4 dígitos
+        if(digitos.length == 4) { //Controla que la ID del producto cuente con solo 4 dígitos
             //Se asigna el primer dígito de la ID como el índice de la especie
             this.especie = Integer.parseInt(String.valueOf(digitos[0]));
 
             StringBuilder acumulador = new StringBuilder();//Acumulador
 
-            for(int i=1; i<digitos.length; i++){
+            for(int i=1; i < digitos.length; ++i){
                 acumulador.append(digitos[i]);//Se añade los últimos tres dígitos en el acumulador
             }
             

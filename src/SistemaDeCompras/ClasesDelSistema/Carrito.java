@@ -19,59 +19,78 @@ public class Carrito {
     public Carrito(Inventario inventario) {
         this.inventario = inventario;
         carrito = new HashMap<>();
-        this.usuario = null;
+//        this.usuario = null;
         this.size = 0;
     }
 
     //Agrega el producto a la lista
-    public void agregarProductoComida(Id id, int cantidad) throws Exception {
-        Producto producto = inventario.obtenerCatComida().buscarProducto(id);
-        if (producto != null) {
-            int stockActual = producto.obtenerStock();
+    public void agregarProducto(Id id, int cantidad) throws Exception {
+        Producto producto = buscarNoNulo(inventario.obtenerCatComida().buscarProducto(id),
+                inventario.obtenerCatAccesorio().buscarProducto(id),
+                inventario.obtenerCatInsMedico().buscarProducto(id));
 
-            if (stockActual >= cantidad) {
-                carrito.put(producto, cantidad);
-                ++size;
-            } else {
-                throw new Exception("Cantidad de stock insuficiente");
-            }
+        if(producto == null) throw new Exception("Producto no encontrado");
+
+        if(cantidad < producto.obtenerStock()) {
+            carrito.put(producto, cantidad);
+            ++size;
         } else {
-            throw new Exception("Producto no encontrado");
+            throw new Exception("Cantidad de stock insuficiente");
         }
     }
 
-    public void agregarAccesorio(Id id, int cantidad) throws Exception {
-        Producto producto = inventario.obtenerCatComida().buscarProducto(id);
-        if (producto != null) {
-            int stockActual = producto.obtenerStock();
-
-            if (stockActual >= cantidad) {
-                carrito.put(producto, cantidad);
-                ++size;
-            } else {
-                throw new Exception("Cantidad de stock insuficiente");
-            }
-        } else {
-            throw new Exception("Producto no encontrado");
-        }
-
+    private Producto buscarNoNulo(Producto p1, Producto p2, Producto p3) {
+        return (p1 != null) ? p1 : (p2 != null) ? p2 : p3;
     }
-    public void agregarInsumos(Id id, int cantidad) throws Exception {
-        Producto producto = inventario.obtenerCatInsMedico().buscarProducto(id);
-        if (producto != null) {
-            int stockActual = producto.obtenerStock();
 
-            if (stockActual >= cantidad) {
-                carrito.put(producto, cantidad);
-                ++size;
-            } else {
-                throw new Exception("Cantidad de stock insuficiente");
-            }
-        } else {
-            throw new Exception("Producto no encontrado");
-        }
-
-    }
+//    public void agregarProductoComida(Id id, int cantidad) throws Exception {
+//        Producto producto = inventario.obtenerCatComida().buscarProducto(id);
+//        if (producto != null) {
+//            int stockActual = producto.obtenerStock();
+//
+//            if (stockActual >= cantidad) {
+//                carrito.put(producto, cantidad);
+//                ++size;
+//            } else {
+//                throw new Exception("Cantidad de stock insuficiente");
+//            }
+//        } else {
+//            throw new Exception("Producto no encontrado");
+//        }
+//    }
+//
+//    public void agregarAccesorio(Id id, int cantidad) throws Exception {
+//        Producto producto = inventario.obtenerCatComida().buscarProducto(id);
+//        if (producto != null) {
+//            int stockActual = producto.obtenerStock();
+//
+//            if (stockActual >= cantidad) {
+//                carrito.put(producto, cantidad);
+//                ++size;
+//            } else {
+//                throw new Exception("Cantidad de stock insuficiente");
+//            }
+//        } else {
+//            throw new Exception("Producto no encontrado");
+//        }
+//
+//    }
+//    public void agregarInsumos(Id id, int cantidad) throws Exception {
+//        Producto producto = inventario.obtenerCatInsMedico().buscarProducto(id);
+//        if (producto != null) {
+//            int stockActual = producto.obtenerStock();
+//
+//            if (stockActual >= cantidad) {
+//                carrito.put(producto, cantidad);
+//                ++size;
+//            } else {
+//                throw new Exception("Cantidad de stock insuficiente");
+//            }
+//        } else {
+//            throw new Exception("Producto no encontrado");
+//        }
+//
+//    }
 
 
     public void modificarCantidad(Id id, int cantidad) throws Exception {
@@ -165,6 +184,7 @@ public class Carrito {
     public String imprimirFactura() {
         DecimalFormat numberFormat = new DecimalFormat("#0.00");
         StringBuilder sb = new StringBuilder();
+        date = new Date();
         sb.append("Fecha: ")
                 .append(date.toString())
                 .append("\n");
@@ -177,9 +197,9 @@ public class Carrito {
         String total = numberFormat.format(calcularTotal());
 
         sb.append(
-                String.format("|%s|%5s|\n|%s|%5s|\n|%s|%5s|\n|%s|%5s|\n|%s|%5s|\n|%s|%5s|\n",
-                        datosFactura[0], usuario.getNombre(),
-                        datosFactura[1], usuario.getCorreo(),
+                String.format("|%s|%5s|\n|%s|%5s|\n|%s|%5s|\n|%s|%5s|\n",
+                        //datosFactura[0], usuario.getNombre(),
+//                        datosFactura[1], usuario.getCorreo(),
                         datosFactura[2], subTotal,
                         datosFactura[3], descuento,
                         datosFactura[4], IVA,
@@ -204,6 +224,11 @@ public class Carrito {
         }
         return productos;
     }
+
+//    public Producto getProducto(Id id) {
+//        Producto producto = getProductos().stream().filter(x -> x.obtenerId() == id).findFirst().get();
+//        return
+//    }
 
 
 

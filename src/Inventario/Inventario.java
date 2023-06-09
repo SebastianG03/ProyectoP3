@@ -45,10 +45,13 @@ public class Inventario {
     public void solicitudCompra(Producto nuevoProducto, int cantidad) {
         if (nuevoProducto instanceof ProductoComida) {
             comida.restarStock(nuevoProducto.obtenerId(), cantidad);
+            comida.aumentarUnVendidas(nuevoProducto.obtenerId(), cantidad);
         } else if (nuevoProducto instanceof ProductoAccesorio) {
             accesorio.restarStock(nuevoProducto.obtenerId(), cantidad);
+            accesorio.aumentarUnVendidas(nuevoProducto.obtenerId(), cantidad);
         } else if (nuevoProducto instanceof ProductoInsMedico) {
             insMedico.restarStock(nuevoProducto.obtenerId(), cantidad);
+            insMedico.aumentarUnVendidas(nuevoProducto.obtenerId(), cantidad);
         }
     }
 

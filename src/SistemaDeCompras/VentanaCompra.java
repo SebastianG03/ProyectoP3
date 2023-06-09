@@ -2,18 +2,16 @@ package SistemaDeCompras;
 
 import Inventario.Inventario;
 import Producto.Producto;
-import Producto.ProductoAccesorio;
-import Producto.ProductoComida;
-import Producto.ProductoInsMedico;
 import SistemaDeCompras.ClasesDelSistema.Carrito;
 import SistemaDeCompras.ClasesDelSistema.Filtros;
 import SistemaDeCompras.DocumentFilter.FilterFormat;
-import Producto.Id;
+import Producto.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
+import java.util.concurrent.Flow;
 
 public class VentanaCompra {
     private JPanel panel1;
@@ -70,12 +68,16 @@ public class VentanaCompra {
     private JButton btnEliminar;
     private JButton comprarButton;
     private JTextArea textAreaFactura;
-    private JTable tableComida;
-    private DefaultTableModel modeloTabla = new DefaultTableModel();
+    private DefaultTableModel modeloTabla = new DefaultTableModel() {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+    };
     private Carrito carrito = new Carrito(new Inventario());
     private Filtros filtroTable = new Filtros();
     List<Producto> productosEnCarro = new ArrayList<>();
-    private DefaultListModel<String> dlm = new DefaultListModel<>();
+    private DefaultListModel<String> listModel = new DefaultListModel<>();
     private List<JTextField> textFieldProductosCompras = Arrays.asList(textFieldProducto0, textFieldProducto1, textFieldProducto2,
             textFieldProducto3, textFieldProducto4, textFieldProducto5, textFieldProducto6);
     private List<JTextField> textFieldCantidadPorProducto = Arrays.asList(textFieldProductoCantidad0, textFieldProductoCantidad1,
@@ -96,6 +98,7 @@ public class VentanaCompra {
         spinnerCantidadProducto5.setModel(new SpinnerNumberModel(0, 0, 99, 1));
         spinnerCantidadProducto6.setModel(new SpinnerNumberModel(0, 0, 99, 1));
         spinnerCantidadP.setModel(new SpinnerNumberModel(0, 0, 99, 1));
+        actualizarTabla(filtroTable.obtenerTodosLosProductos());
 
 
         btoFiltrar.addActionListener(new ActionListener() {
@@ -104,7 +107,7 @@ public class VentanaCompra {
                 String filtro = Objects.requireNonNull(cboOrdenarFiltros.getSelectedItem()).toString();
                 String categoria = Objects.requireNonNull(cboCategorias.getSelectedItem()).toString();
                 String especie = Objects.requireNonNull(cboEspecies.getSelectedItem()).toString();
-                inicializarTablaPComida();
+                inicializarTabla();
                 actualizarTabla(filtroTable.filtrar(categoria, especie, filtro));
                 txtBuscarId.setText("");
             }
@@ -116,7 +119,7 @@ public class VentanaCompra {
                 String id = txtBuscarId.getText();
                 try {
                     Id identificador = new Id(id);
-                    inicializarTablaPComida();
+                    inicializarTabla();
                     actualizarTabla(new Object[] {filtroTable.buscarProductoPorId(identificador)});
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -130,13 +133,7 @@ public class VentanaCompra {
                 try {
                     Id identificador = new Id(txtIngresarIdCarrito.getText());
                     if(carrito.size() <= 7) {
-                        if (cboCategorias.getSelectedItem().equals("Comida")) {
-                            carrito.agregarProductoComida(identificador, Integer.parseInt(spinnerCantidadP.getValue().toString()));
-                        } else if (cboCategorias.getSelectedItem().equals("Accesorios")) {
-                            carrito.agregarAccesorio(identificador, Integer.parseInt(spinnerCantidadP.getValue().toString()));
-                        } else {
-                            carrito.agregarInsumos(identificador, Integer.parseInt(spinnerCantidadP.getValue().toString()));
-                        }
+                        carrito.agregarProducto(identificador, Integer.parseInt(spinnerCantidadP.getValue().toString()));
                         addToBuyPannel();
                         textAreaFactura.setText(carrito.imprimirFactura());
                     } else JOptionPane.showMessageDialog(null, "El carrito se encuentra lleno\n" +
@@ -146,11 +143,11 @@ public class VentanaCompra {
                     throw new RuntimeException(e);
                 }
 
-                dlm.clear(); // Se restablece el contenido del DefaultListModel antes de agregar los nuevos elementos
+                listModel.clear(); // Se restablece el contenido del DefaultListModel antes de agregar los nuevos elementos
                 for (Map.Entry<Producto, Integer> entry : carrito.carrito.entrySet()) {
-                    dlm.addElement(entry.toString() + " Cantidad: " + spinnerCantidadP.getValue().toString());
+                    listModel.addElement(entry.toString() + " Cantidad: " + spinnerCantidadP.getValue().toString());
                 }
-                listProductosEnCarro.setModel(dlm);
+                listProductosEnCarro.setModel(listModel);
             }
 
 
@@ -322,6 +319,29 @@ public class VentanaCompra {
                 }
             }
         });
+        comprarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                carrito.comprar();
+                JOptionPane.showMessageDialog(null, "Gracias por su patrocinio!\n" + carrito.imprimirFactura());
+            }
+        });
+        másInformacionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String id = textFieldID.getText();
+                try {
+                    Producto producto = filtroTable.buscarProductoPorId(new Id(id));
+                    String datos;
+                    datos = (producto instanceof ProductoAccesorio)? obtenerDatosAccesorios(producto) :
+                            (producto instanceof ProductoInsMedico)? obtenerDatosMedicamentos(producto) :
+                                    obtenerDatosComida(producto);
+                    JOptionPane.showMessageDialog(null, datos);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, ex.getMessage());
+                }
+            }
+        });
     }
 
     public static void main(String[] args) {
@@ -330,20 +350,6 @@ public class VentanaCompra {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
-    }
-    public void inicializarTablaPComida(){
-        modeloTabla.setColumnCount(0);
-        modeloTabla.addColumn("ID");
-        modeloTabla.addColumn("NOMBRE");
-        modeloTabla.addColumn("ESPECIE");
-        modeloTabla.addColumn("PRECIO");
-        modeloTabla.addColumn("DESCUENTO");
-        modeloTabla.addColumn("STOCK");
-        modeloTabla.addColumn("UNIDADES VENDIDAS");
-        modeloTabla.addColumn("CALIFICACIÓN");
-        modeloTabla.addColumn("DESCRIPCIÓN");
-        tablaProductos.setModel(modeloTabla);
-
     }
 
     public void inicializarTabla(){
@@ -392,6 +398,67 @@ public class VentanaCompra {
     private void createUIComponents() {
         txtBuscarId = new FilterFormat().filterFormatField(30, "[a-zA-Z0-9\\s]*");
         textFieldID = new FilterFormat().filterFormatField(5, "[0-9]*");
+    }
+
+    public String obtenerDatosAccesorios(Producto producto) {
+        String accesorioFormat = """
+                        Nombre: %s
+                        Especie: %s
+                        Precio: %.02f
+                        Descuento: %.02f
+                        Marca: %s
+                        Fabricante: %s
+                        Tipo: %s
+                        Para: %s
+                        Calificación: %d
+                        Descripción: %d
+                        """;
+        ProductoAccesorio p = (ProductoAccesorio) producto;
+        return String.format(accesorioFormat, p.obtenerNombre(), p.obtenerEspecie(), p.obtenerPrecio(),
+                p.obtenerDescuento(), p.obtenerMarca(), p.obtenerFabricante(), p.obtenerTipo(),
+                p.obtenerEtapaDeVida(), p.obtenerCalificacion(), p.obtenerDescripcion());
+    }
+
+    public String obtenerDatosMedicamentos(Producto producto) {
+        String insMedicoFormat = """
+                        Nombre: %s
+                        Especie: %s
+                        Precio: %.02f
+                        Descuento: %.02f
+                        Marca: %s
+                        Fabricante: %s
+                        Tipo: %s\s
+                        Calificación: %d
+                        Descripción: %d
+                        """;
+
+        ProductoInsMedico p = (ProductoInsMedico) producto;
+        return String.format(insMedicoFormat, p.obtenerNombre(), p.obtenerEspecie(), p.obtenerPrecio(),
+                p.obtenerDescuento(), p.obtenerMarca(), p.obtenerFabricante(), p.obtenerTipo(),
+                p.obtenerCalificacion(), p.obtenerDescripcion());
+    }
+
+    public String obtenerDatosComida(Producto producto) {
+        String comidaFormat = """
+                        Nombre: %s
+                        Especie: %s
+                        Precio: %.02f
+                        Descuento: %.02f
+                        Marca: %s
+                        Fabricante: %s
+                        Raza: %s
+                        Sabor: %s
+                        Contenedor: %s
+                        Para: %s
+                        Tipo: %s\s
+                        Calificación: %d
+                        Descripción: %d
+                        """;
+        ProductoComida p = (ProductoComida) producto;
+        return String.format(comidaFormat, p.obtenerNombre(), p.obtenerEspecie(), p.obtenerPrecio(),
+                p.obtenerDescuento(), p.obtenerMarca(), p.obtenerFabricante(), p.obtenerRaza(), p.obtenerSabor(),
+                p.obtenerContenedor(), p.obtenerEtapaDeVida(), p.obtenerCalificacion(), p.obtenerDescripcion());
+
     }
 
 

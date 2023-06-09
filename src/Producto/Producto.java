@@ -99,8 +99,8 @@ public abstract class Producto implements Comparable {
     public void restarStock(int cantidad){
         this.stock -= cantidad;
     }
-    public void aumentarUnVendidas(){
-        this.unidadesVendidas += 1;
+    public void aumentarUnVendidas(int cantidad){
+        this.unidadesVendidas += cantidad;
     }
     public boolean obtenerAccesibilidad(){
         if(this.stock > 0){

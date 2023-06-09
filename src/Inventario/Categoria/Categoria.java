@@ -44,7 +44,7 @@ public abstract class Categoria {
             JOptionPane.showMessageDialog(null,ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
         }
     }
-    public Producto buscarProducto(Id identificador) throws Exception{
+    public Producto buscarProducto(Id identificador) throws Exception {
         Object[] arregloProductos = productos.toArray();
         int indice = busquedaBinaria(arregloProductos,identificador);
         if(indice >= 0){
@@ -242,12 +242,12 @@ public abstract class Categoria {
             JOptionPane.showMessageDialog(null,ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
         }
     }
-    public void aumentarUnVendidas(Id id){
+    public void aumentarUnVendidas(Id id, int cantidad){
         Object[] arregloProductos = productos.toArray();
         try{
             int indice = busquedaBinaria(arregloProductos, id);
             Producto aModificar = (Producto) arregloProductos[indice];
-            aModificar.aumentarUnVendidas();
+            aModificar.aumentarUnVendidas(cantidad);
         }catch (Exception ex){
             JOptionPane.showMessageDialog(null,ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
         }
