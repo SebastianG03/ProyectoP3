@@ -85,13 +85,7 @@ public class Filtros {
     }
 
     public Producto buscarProductoPorId(Id id) throws Exception {
-        //      Producto producto;
-        //        if(inventario.buscar_producto_comida(id) != null)
-//            producto = inventario.buscar_producto_comida(id);
-//        else if(inventario.buscar_producto_accesorios(id) != null)
-//            producto = inventario.buscar_producto_accesorios(id);
-//        else
-//            producto = inventario.buscar_producto_insumos_medicos(id);
+
         return (inventario.obtenerCatComida().buscarProducto(id) != null)? inventario.obtenerCatComida().buscarProducto(id) :
                         (inventario.obtenerCatAccesorio().buscarProducto(id) != null)? inventario.obtenerCatAccesorio().buscarProducto(id) :
                                 inventario.obtenerCatInsMedico().buscarProducto(id);
