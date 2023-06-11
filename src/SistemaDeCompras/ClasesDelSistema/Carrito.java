@@ -169,10 +169,13 @@ public class Carrito {
         //Ingresa los datos del carrito al StringBuilder
         for(Map.Entry<Producto, Integer> e : carrito.entrySet()) {
             producto = e.getKey();
-            sb.append(String.format(format, producto.obtener_id().toString(),
-                    producto.obtener_nombre(),
-                    e.getValue(),
-                    producto.obtener_precio()));
+            sb.append("Id: ")
+                    .append(producto.obtener_id())
+                    .append("\nNombre: ")
+                    .append(producto.obtener_nombre())
+                    .append("\nCantidad: ")
+                    .append(e.getValue())
+                    .append("\nPrecio Unitario: ");
         }
 
         return sb.toString();

@@ -396,7 +396,7 @@
                 </constraints>
                 <properties>
                   <background color="-1"/>
-                  <enabled value="false"/>
+                  <enabled value="true"/>
                   <foreground color="-1907998"/>
                   <tabLayoutPolicy value="1"/>
                   <tabPlacement value="1"/>
