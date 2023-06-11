@@ -7,6 +7,7 @@ import Inventario.Inventario;
 
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Carrito {
 

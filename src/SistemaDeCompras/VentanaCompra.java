@@ -26,40 +26,6 @@ public class VentanaCompra {
     private JTextField txtBuscarId;
     private JButton btoBuscar;
     private JTable tablaProductos;
-    private JButton eliminarButton;
-    private JButton eliminarButton1;
-    private JButton eliminarButton2;
-    private JButton eliminarButton3;
-    private JButton eliminarButton4;
-    private JButton eliminarButton6;
-    private JButton eliminarButton5;
-    private JButton modificarButton0;
-    private JSpinner spinnerCantidadProducto0;
-    private JButton modificarButton1;
-    private JButton modificarButton2;
-    private JButton modificarButton3;
-    private JButton modificarButton4;
-    private JButton modificarButton5;
-    private JButton modificarButton6;
-    private JSpinner spinnerCantidadProducto1;
-    private JSpinner spinnerCantidadProducto2;
-    private JSpinner spinnerCantidadProducto3;
-    private JSpinner spinnerCantidadProducto4;
-    private JSpinner spinnerCantidadProducto5;
-    private JSpinner spinnerCantidadProducto6;
-    private JTextField textFieldProducto1;
-    private JTextField textFieldProducto2;
-    private JTextField textFieldProducto3;
-    private JTextField textFieldProducto4;
-    private JTextField textFieldProducto5;
-    private JTextField textFieldProducto6;
-    private JTextField textFieldProductoCantidad0;
-    private JTextField textFieldProductoCantidad1;
-    private JTextField textFieldProductoCantidad2;
-    private JTextField textFieldProductoCantidad3;
-    private JTextField textFieldProductoCantidad4;
-    private JTextField textFieldProductoCantidad5;
-    private JTextField textFieldProductoCantidad6;
     private JComboBox cboEspecies;
     private JButton másInformacionButton;
     private JTextField textFieldID;
@@ -128,25 +94,11 @@ public class VentanaCompra {
     private DefaultListModel<String>  listModel = new DefaultListModel<>();
     private Inventario inventario = new Inventario();
     private Categoria categoria;
-    private List<JTextField> textFieldProductosCompras = Arrays.asList(textFieldProducto0, textFieldProducto1, textFieldProducto2,
-            textFieldProducto3, textFieldProducto4, textFieldProducto5, textFieldProducto6);
-    private List<JTextField> textFieldCantidadPorProducto = Arrays.asList(textFieldProductoCantidad0, textFieldProductoCantidad1,
-            textFieldProductoCantidad2, textFieldProductoCantidad3, textFieldProductoCantidad4,
-            textFieldProductoCantidad5, textFieldProductoCantidad6);
-    private List<JSpinner> spinnersModificarCantidad = Arrays.asList(spinnerCantidadProducto0, spinnerCantidadProducto1,
-            spinnerCantidadProducto2, spinnerCantidadProducto3, spinnerCantidadProducto4, spinnerCantidadProducto5, spinnerCantidadProducto6);
 
 
     public VentanaCompra() {
         //Inicializar
         inicializarTabla();
-        spinnerCantidadProducto0.setModel(new SpinnerNumberModel(0, 0, 99, 1));
-        spinnerCantidadProducto1.setModel(new SpinnerNumberModel(0, 0, 99, 1));
-        spinnerCantidadProducto2.setModel(new SpinnerNumberModel(0, 0, 99, 1));
-        spinnerCantidadProducto3.setModel(new SpinnerNumberModel(0, 0, 99, 1));
-        spinnerCantidadProducto4.setModel(new SpinnerNumberModel(0, 0, 99, 1));
-        spinnerCantidadProducto5.setModel(new SpinnerNumberModel(0, 0, 99, 1));
-        spinnerCantidadProducto6.setModel(new SpinnerNumberModel(0, 0, 99, 1));
         spinnerCantidadP.setModel(new SpinnerNumberModel(0, 0, 99, 1));
         actualizarTabla(obtenerTodosLosProductos());
 
@@ -214,161 +166,6 @@ public class VentanaCompra {
                 }
             }
         });
-        modificarButton0.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    modificarCantidadEnCarro(0);
-                    textAreaFactura.setText(carrito.imprimirFactura());
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage());
-                }
-            }
-        });
-        modificarButton1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    modificarCantidadEnCarro(1);
-                    textAreaFactura.setText(carrito.imprimirFactura());
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage());
-                }
-            }
-        });
-        modificarButton2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    modificarCantidadEnCarro(2);
-                    textAreaFactura.setText(carrito.imprimirFactura());
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage());
-                }
-            }
-        });
-        modificarButton3.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    modificarCantidadEnCarro(3);
-                    textAreaFactura.setText(carrito.imprimirFactura());
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage());
-                }
-            }
-        });
-        modificarButton4.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    modificarCantidadEnCarro(4);
-                    textAreaFactura.setText(carrito.imprimirFactura());
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage());
-                }
-            }
-        });
-        modificarButton5.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    modificarCantidadEnCarro(5);
-                    textAreaFactura.setText(carrito.imprimirFactura());
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage());
-                }
-            }
-        });
-        modificarButton6.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    modificarCantidadEnCarro(6);
-                    textAreaFactura.setText(carrito.imprimirFactura());
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage());
-                }
-            }
-        });
-        eliminarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    eliminarProductoDeCarro(0);
-                    textAreaFactura.setText(carrito.imprimirFactura());
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage());
-                }
-            }
-        });
-        eliminarButton1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    eliminarProductoDeCarro(1);
-                    textAreaFactura.setText(carrito.imprimirFactura());
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage());
-                }
-            }
-        });
-        eliminarButton2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    eliminarProductoDeCarro(2);
-                    textAreaFactura.setText(carrito.imprimirFactura());
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage());
-                }
-            }
-        });
-        eliminarButton3.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    eliminarProductoDeCarro(3);
-                    textAreaFactura.setText(carrito.imprimirFactura());
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage());
-                }
-            }
-        });
-        eliminarButton4.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    eliminarProductoDeCarro(4);
-                    textAreaFactura.setText(carrito.imprimirFactura());
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage());
-                }
-            }
-        });
-        eliminarButton5.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    eliminarProductoDeCarro(5);
-                    textAreaFactura.setText(carrito.imprimirFactura());
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage());
-                }
-            }
-        });
-        eliminarButton6.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    eliminarProductoDeCarro(6);
-                    textAreaFactura.setText(carrito.imprimirFactura());
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage());
-                }
-            }
-        });
-
 
         másInformacionButton.addActionListener(new ActionListener() {
             @Override
@@ -425,18 +222,9 @@ public class VentanaCompra {
     }
 
     public void addToBuyPannel() {
-        List<Producto> productosEnCarro = carrito.getProductos();
-
-        for(int i = 0; i < productosEnCarro.size(); ++i) {
-            textFieldProductosCompras.get(i).setText(productosEnCarro.get(i).obtener_nombre());
-            textFieldCantidadPorProducto.get(i).setText(Integer.toString(carrito.obtenerCantidadEnCarro(productosEnCarro.get(i))));
-        }
     }
 
     public void modificarCantidadEnCarro(int index) throws Exception {
-        int cantidad = Integer.parseInt(spinnersModificarCantidad.get(index).getValue().toString());
-        textFieldCantidadPorProducto.get(index).setText(Integer.toString(cantidad));
-        carrito.modificarCantidad(productosEnCarro.get(index), cantidad);
     }
 
     public void eliminarProductoDeCarro(int index) throws Exception {
