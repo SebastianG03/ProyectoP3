@@ -1,7 +1,5 @@
 package SistemaDeCompras.ClasesDelSistema;
 
-import Inventario.Inventario;
-import Inventario.Categoria.Categoria;
 import Producto.Id;
 import Producto.Producto;
 

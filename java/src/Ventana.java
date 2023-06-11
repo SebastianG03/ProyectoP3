@@ -1,6 +1,5 @@
 import Inventario.Categoria.*;
 import Producto.*;
-import Inventario.Inventario;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;

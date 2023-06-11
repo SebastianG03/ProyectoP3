@@ -1,5 +1,4 @@
 import Inventario.Categoria.*;
-import Inventario.Inventario;
 import Producto.Producto;
 import SistemaDeCompras.ClasesDelSistema.Carrito;
 import SistemaDeCompras.ClasesDelSistema.HistorialCompras;
