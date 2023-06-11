@@ -1,9 +1,12 @@
+package SistemaDeCompras;
+
 import Inventario.Categoria.*;
-import Producto.Producto;
+import Inventario.Inventario;
+import Producto.*;;
 import SistemaDeCompras.ClasesDelSistema.Carrito;
 import SistemaDeCompras.ClasesDelSistema.HistorialCompras;
 import SistemaDeCompras.DocumentFilter.FilterFormat;
-import Producto.*;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
@@ -66,6 +69,53 @@ public class VentanaCompra {
     private JTextArea textAreaFactura;
     private JButton comprarButton;
     private JTextArea textAreaHistorialDeCompras;
+    private JButton button1;
+    private JComboBox cboAgregarEspeciePComida;
+    private JTextField txtAgregarNombrePComida;
+    private JSpinner spnAgregarStockPComida;
+    private JTextField txtAgregarPrecioPComida;
+    private JTextField txtAgregarDescuentoPComida;
+    private JTextArea txtAgregarDescripcionPComida;
+    private JComboBox cboAgregarMarcaPComida;
+    private JComboBox cboAgregarFabricantePComida;
+    private JComboBox cboAgregarRazaPComida;
+    private JComboBox cboAgregarSaborPComida;
+    private JComboBox cboAgregarContenedorPComiad;
+    private JComboBox cboAgregarTipoPComida;
+    private JComboBox cboAgregarEtapaDeVidaPComida;
+    private JButton btn_limpiar_agregar_comida;
+    private JButton btn_agregar_comida;
+    private JComboBox cboModificarMarcaPComida;
+    private JComboBox cboModificarFabricantePComida;
+    private JComboBox cboModificarRazaPComida;
+    private JComboBox cboModificarSaborPComida;
+    private JComboBox cboModificarContenedorPComida;
+    private JComboBox cboModificarTipoPComida;
+    private JComboBox cboModificarEtapaDeVidaPComida;
+    private JTextField txtModificarNombrePComida;
+    private JSpinner spnModificarStockPComida;
+    private JTextField txtModificarPrecioPComida;
+    private JTextField txtModificarDescuentoPComida;
+    private JTextArea txtModificarDescripcionPComida;
+    private JTextField txt_identificador_producto_comida;
+    private JButton btn_buscar_modificar_comida;
+    private JButton btn_cancelar_modificar_comida;
+    private JButton btn_limpiar_modificar_comida;
+    private JButton btnModificarPComida;
+    private JTextField txtEliminarPComida;
+    private JButton btnEliminarPComida;
+    private JTable tabla_producto_comida;
+    private JTextField txtBuscarPComida;
+    private JButton btnBuscarPComida;
+    private JButton btn_consultar_producto_comida;
+    private JButton btn_cancelar_busqueda_comida;
+    private JComboBox cbo_filtro_comida;
+    private JComboBox cboOrdenPComida;
+    private JComboBox cbo_mostrar_productos_comida;
+    private JButton btnFiltroPComida;
+    private JList listProductos;
+    private JButton eliminarProductoButton;
+    private JButton modificarProductoButton;
     private DefaultTableModel modeloTabla = new DefaultTableModel() {
         @Override
         public boolean isCellEditable(int row, int column) {
@@ -447,12 +497,12 @@ public class VentanaCompra {
     public Object[] filtrar(String categoria, String raza, String filtro) {
         Object[] list;
         if(raza.compareToIgnoreCase("Ninguno") == 0) {
-            list = (categoria.compareToIgnoreCase("Comida") == 0)? new Comida[]{inventario.obtener_categoria_comida()} :
-                    (categoria.compareToIgnoreCase("Accesorios") == 0)? new Accesorio[]{inventario.obtener_categoria_accesorio()} : new InsMedico[]{inventario.obtener_insumo_medico()};
+            list = (categoria.compareToIgnoreCase("Comida") == 0)? new Comida[]{inventario.obtenerCategoriaComida()} :
+                    (categoria.compareToIgnoreCase("Accesorios") == 0)? new Accesorio[]{inventario.obtenerCategoriaAccesorio()} : new InsMedico[]{inventario.obtenerCategoriaInsMedico()};
         } else {
-            list = (categoria.compareToIgnoreCase("Comida") == 0)? inventario.obtener_categoria_comida().filtrar_por_mascota(raza) :
-                    (categoria.compareToIgnoreCase("Accesorios") == 0)? inventario.obtener_categoria_accesorio().filtrar_por_mascota(raza) :
-                            inventario.obtener_insumo_medico().filtrar_por_mascota(raza);
+            list = (categoria.compareToIgnoreCase("Comida") == 0)? inventario.obtenerCategoriaComida().filtrar_por_mascota(raza) :
+                    (categoria.compareToIgnoreCase("Accesorios") == 0)? inventario.obtenerCategoriaAccesorio().filtrar_por_mascota(raza) :
+                            inventario.obtenerCategoriaInsMedico().filtrar_por_mascota(raza);
         }
 
         ordenarTodosLosProductos(list, filtro);
@@ -474,46 +524,46 @@ public class VentanaCompra {
 
     private void ordenarProductosPorPrecio(Object[] productos) {
         if (productos instanceof ProductoAccesorio[])
-            inventario.obtener_categoria_comida().ordenar_por_precio(productos);
+            inventario.obtenerCategoriaAccesorio().ordenar_por_precio(productos);
         else if (productos instanceof  ProductoComida[])
-            inventario.obtener_categoria_comida().ordenar_por_precio(productos);
+            inventario.obtenerCategoriaComida().ordenar_por_precio(productos);
         else
-            inventario.obtener_insumo_medico().ordenar_por_precio(productos);
+            inventario.obtenerCategoriaInsMedico().ordenar_por_precio(productos);
     }
 
     private void ordenarProductosPorStock(Object[] productos) {
         if(productos instanceof  ProductoAccesorio[])
-            inventario.obtener_categoria_comida().ordenar_por_stock(productos);
+            inventario.obtenerCategoriaAccesorio().ordenar_por_stock(productos);
         else if (productos instanceof  ProductoComida[])
-            inventario.obtener_categoria_comida().ordenar_por_stock(productos);
+            inventario.obtenerCategoriaComida().ordenar_por_stock(productos);
         else
-            inventario.obtener_insumo_medico().ordenar_por_stock(productos);
+            inventario.obtenerCategoriaInsMedico().ordenar_por_stock(productos);
     }
 
     private void ordenarProductosPorUnidadesVendidas(Object[] productos) {
         if(productos instanceof  ProductoAccesorio[])
-            inventario.obtener_categoria_comida().ordenar_por_unidades_vendidas(productos);
+            inventario.obtenerCategoriaAccesorio().ordenar_por_unidades_vendidas(productos);
         else if(productos instanceof  ProductoComida[])
-            inventario.obtener_categoria_comida().ordenar_por_unidades_vendidas(productos);
+            inventario.obtenerCategoriaComida().ordenar_por_unidades_vendidas(productos);
         else
-            inventario.obtener_insumo_medico().ordenar_por_unidades_vendidas(productos);
+            inventario.obtenerCategoriaInsMedico().ordenar_por_unidades_vendidas(productos);
     }
 
     private void ordenarProductosPorCalificacion(Object[] productos) {
         if(productos instanceof ProductoAccesorio[])
-            inventario.obtener_categoria_comida().ordenar_por_calificacion(productos);
+            inventario.obtenerCategoriaAccesorio().ordenar_por_calificacion(productos);
         else if(productos instanceof  ProductoComida[])
-            inventario.obtener_categoria_comida().ordenar_por_calificacion(productos);
+            inventario.obtenerCategoriaComida().ordenar_por_calificacion(productos);
         else
-            inventario.obtener_insumo_medico().ordenar_por_calificacion(productos);
+            inventario.obtenerCategoriaInsMedico().ordenar_por_calificacion(productos);
     }
 
 
     public Object[] obtenerTodosLosProductos() {
         List<Object> list = new ArrayList<>();
-        list.addAll(List.of(inventario.obtener_categoria_comida()));
-        list.addAll(List.of(inventario.obtener_categoria_accesorio()));
-        list.addAll(List.of(inventario.obtener_insumo_medico()));
+        list.addAll(List.of(inventario.obtenerCategoriaComida()));
+        list.addAll(List.of(inventario.obtenerCategoriaAccesorio()));
+        list.addAll(List.of(inventario.obtenerCategoriaInsMedico()));
         return list.toArray();
     }
 }

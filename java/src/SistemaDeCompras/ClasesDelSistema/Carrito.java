@@ -2,6 +2,8 @@ package SistemaDeCompras.ClasesDelSistema;
 
 import Producto.Id;
 import Producto.Producto;
+import Inventario.Categoria.Categoria;
+import Inventario.Inventario;
 
 import java.text.DecimalFormat;
 import java.util.*;

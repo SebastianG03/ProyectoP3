@@ -1,9 +1,8 @@
-import Inventario.Categorias.Comida;
-import Inventario.Inventario;
-import Inventario.Producto.Id;
-import Inventario.Producto.Producto;
-import Inventario.Producto.ProductoComida;
+package SistemaDeCompras;
 
+import Inventario.*;
+import Inventario.Categoria.*;
+import Producto.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
