@@ -1,13 +1,14 @@
 package SistemaDeCompras;
 
+import Inventario.*;
 import Inventario.Categoria.*;
-import Producto.Id;
-import Producto.ProductoComida;
-import Producto.Producto;
-
+import Producto.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class Ventana {
     private JPanel Principal;
@@ -25,14 +26,14 @@ public class Ventana {
     private JComboBox cboAgregarContenedorPComiad;
     private JComboBox cboAgregarTipoPComida;
     private JComboBox cboAgregarEtapaDeVidaPComida;
-    private JButton btnAgregarPComida;
-    private JButton btnLimpiarPComida1;
-    private JTable tablaPComida;
-    private JComboBox cboFiltroPComida;
+    private JButton btn_agregar_comida;
+    private JButton btn_limpiar_agregar_comida;
+    private JTable tabla_producto_comida;
+    private JComboBox cbo_filtro_comida;
     private JComboBox cboOrdenPComida;
     private JButton btnFiltroPComida;
-    private JTextField txtIdModificarPComida;
-    private JButton btnBuscarMPComida;
+    private JTextField txt_identificador_producto_comida;
+    private JButton btn_buscar_modificar_comida;
     private JTextField txtModificarNombrePComida;
     private JTextField txtModificarPrecioPComida;
     private JTextField txtModificarDescuentoPComida;
@@ -45,18 +46,19 @@ public class Ventana {
     private JComboBox cboModificarSaborPComida;
     private JComboBox cboModificarContenedorPComida;
     private JComboBox cboModificarTipoPComida;
-    private JButton btnLimpiarPComida2;
+    private JButton btn_limpiar_modificar_comida;
     private JButton btnModificarPComida;
     private JTextField txtEliminarPComida;
     private JButton btnEliminarPComida;
-    private JButton btnCancelarModificarPComida;
-    private JComboBox cboMostrarPComida;
+    private JButton btn_cancelar_modificar_comida;
+    private JComboBox cbo_mostrar_productos_comida;
     private JTextField txtBuscarPComida;
     private JButton btnBuscarPComida;
-    private JButton btnCancelarBusquedaPComida;
-    private JButton btnConsultarPComida;
-    public static Inventario inventario = new Inventario();
-    private DefaultTableModel modeloTablaPComida = new DefaultTableModel();
+    private JButton btn_cancelar_busqueda_comida;
+    private JButton btn_consultar_producto_comida;
+    private JButton button1;
+    private Inventario inventario = new Inventario();
+    private DefaultTableModel modelo_tabla_comida = new DefaultTableModel();
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Ventana");
@@ -66,26 +68,19 @@ public class Ventana {
         frame.setVisible(true);
     }
 
+    //CONSTRUCTOR
     public Ventana() {
         //INICIALIZAR - COMIDA
-        inicializarTablaPComida();
-        inicializarAgregarPComida();
-        inicializarComponentesModificarPComida();
-        tablaPComida.setEnabled(false);
-        cboFiltroPComida.addItem("Ninguno");
-        for(String s: inventario.obtenerCatComida().obtenerEspecies()){
-            cboFiltroPComida.addItem(s);
-        }
-        actualizarTablaPComida(filtrarProductosComida());
-        btnCancelarBusquedaPComida.setEnabled(false);
-        btnConsultarPComida.setEnabled(false);
-
+        inicializar_tabla_comida();
+        inicializar_componentes_agregar_comida();
+        inicializar_componentes_modificar_comida();
+        inicializar_componentes_lista_productos();
         //BOTONES - COMIDA
             //AGREGAR PRODUCTO - COMIDA
-        btnAgregarPComida.addActionListener(new ActionListener() {
+        btn_agregar_comida.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            //CARACTERISTICAS GENERALES
+             //CARACTERISTICAS GENERALES
             String categoria = "Comida";
             String especie = cboAgregarEspeciePComida.getSelectedItem().toString();
             String nombre = txtAgregarNombrePComida.getText();
@@ -101,9 +96,11 @@ public class Ventana {
             String contenedor = cboAgregarContenedorPComiad.getSelectedItem().toString();
             String etapaDeVida = cboAgregarEtapaDeVidaPComida.getSelectedItem().toString();
             String tipo = cboAgregarTipoPComida.getSelectedItem().toString();
-            if(especie.isEmpty() || nombre.isEmpty() || precio.isEmpty() || descuento.isEmpty() || stock.isEmpty() ||
-            descripcion.isEmpty() || marca.isEmpty() || fabricante.isEmpty() || raza.isEmpty() || sabor.isEmpty() ||
-            contenedor.isEmpty() || etapaDeVida.isEmpty() || tipo.isEmpty()){
+
+            String[] campos_de_texto = {especie,nombre,precio,descuento,stock,descripcion,marca,fabricante,raza,
+            sabor,contenedor,etapaDeVida,tipo};
+
+            if(verificar_campos_de_texto(campos_de_texto)){
                 JOptionPane.showMessageDialog(null,"Campos Vacíos",
                         "Error",JOptionPane.ERROR_MESSAGE);
             }else{
@@ -111,12 +108,13 @@ public class Ventana {
                     double precioDouble = Double.parseDouble(precio);
                     double descuentoDouble = Double.parseDouble(descuento);
                     int stockInt = Integer.parseInt(stock);
-                    ProductoComida nuevoProducto = new ProductoComida(categoria,especie,nombre,precioDouble,descuentoDouble,
+                    ProductoComida nuevoProducto = new ProductoComida("Comida",especie,nombre,precioDouble,descuentoDouble,
                             stockInt,descripcion,marca,fabricante,raza,sabor,contenedor,etapaDeVida,tipo);
-                    inventario.agregarProducto(nuevoProducto);
-                    actualizarTablaPComida(filtrarProductosComida());
-                    JOptionPane.showMessageDialog(null,"Producto agregado");
-                    limpiarAgregarPComida();
+                    if(inventario.agregarProducto("Comida",nuevoProducto)){
+                        actualizar_tabla_comida(filtrar_productos_comida());
+                        JOptionPane.showMessageDialog(null,"Inventario.Producto agregado");
+                        limpiar_componentes_agregar_comida();
+                    }
                 }catch (Exception ex){
                     JOptionPane.showMessageDialog(null,"Formato equivocado",
                             "Error",JOptionPane.ERROR_MESSAGE);
@@ -124,10 +122,10 @@ public class Ventana {
             }
         }
             });
-        btnLimpiarPComida1.addActionListener(new ActionListener() {
+        btn_limpiar_agregar_comida.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                limpiarAgregarPComida();
+                limpiar_componentes_agregar_comida();
             }
         });
             //MODIFICAR PRODUCTO - COMIDA
@@ -149,9 +147,11 @@ public class Ventana {
                 String contenedor = cboModificarContenedorPComida.getSelectedItem().toString();
                 String etapaDeVida = cboModificarEtapaDeVidaPComida.getSelectedItem().toString();
                 String tipo = cboModificarTipoPComida.getSelectedItem().toString();
-                if(nombre.isEmpty() || precio.isEmpty() || descuento.isEmpty() || stock.isEmpty() ||
-                        descripcion.isEmpty() || marca.isEmpty() || fabricante.isEmpty() || raza.isEmpty() || sabor.isEmpty() ||
-                        contenedor.isEmpty() || etapaDeVida.isEmpty() || tipo.isEmpty()){
+
+                String[] campos_de_texto = {nombre,precio,descuento,stock,descripcion,marca,fabricante,raza,
+                        sabor,contenedor,etapaDeVida,tipo};
+
+                if(verificar_campos_de_texto(campos_de_texto)){
                     JOptionPane.showMessageDialog(null,"Campos Vacíos",
                             "Error",JOptionPane.ERROR_MESSAGE);
                 }else{
@@ -159,17 +159,18 @@ public class Ventana {
                         double precioDouble = Double.parseDouble(precio);
                         double descuentoDouble = Double.parseDouble(descuento);
                         int stockInt = Integer.parseInt(stock);
-                        Id identificador = new Id(txtIdModificarPComida.getText());
-                        inventario.obtenerCatComida().modificarProducto(identificador,nombre,precioDouble,descuentoDouble,
-                                stockInt,descripcion);
-                        inventario.obtenerCatComida().modificarProductoComida(identificador,marca,fabricante,raza,sabor,
-                                contenedor,etapaDeVida,tipo);
-                        habilitarComponentesModificarPComida(false);
-                        txtIdModificarPComida.setEnabled(true);
-                        btnBuscarMPComida.setEnabled(true);
-                        JOptionPane.showMessageDialog(null,"Producto modificado");
-                        limpiarModificarPComida();
-                        actualizarTablaPComida(filtrarProductosComida());
+                        Id identificador = new Id(txt_identificador_producto_comida.getText());
+                        inventario.obtenerCategoria("Comida").modificar_producto(identificador,nombre,precioDouble,
+                                descuentoDouble,stockInt,descripcion);
+                        Comida aux = (Comida) inventario.obtenerCategoria("Comida");
+                        aux.modificar_producto_comida(identificador,marca,fabricante,raza,sabor,contenedor,
+                                etapaDeVida,tipo);
+                        habilitar_componentes_modificar_comida(false);
+                        txt_identificador_producto_comida.setEnabled(true);
+                        btn_buscar_modificar_comida.setEnabled(true);
+                        JOptionPane.showMessageDialog(null,"Inventario.Producto modificado");
+                        limpiar_componentes_modificar_comida();
+                        actualizar_tabla_comida(filtrar_productos_comida());
                     }catch (Exception ex){
                         JOptionPane.showMessageDialog(null,"Formato incorrecto",
                                 "Error",JOptionPane.ERROR_MESSAGE);
@@ -177,42 +178,38 @@ public class Ventana {
                 }
             }
         });
-        btnBuscarMPComida.addActionListener(new ActionListener() {
+        btn_buscar_modificar_comida.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Producto producto = buscarProductoComida(txtIdModificarPComida);
+                Producto producto = buscar_producto_comida(txt_identificador_producto_comida);
                 if(producto!=null){
-                    txtModificarNombrePComida.setText(producto.obtenerNombre());
-                    txtModificarPrecioPComida.setText(String.valueOf(producto.obtenerPrecio()));
-                    txtModificarDescuentoPComida.setText(String.valueOf(producto.obtenerDescuento()));
-                    spnModificarStockPComida.setValue(producto.obtenerStock());
-                    txtModificarDescripcionPComida.setText(producto.obtenerDescripcion());
-                    cboModificarMarcaPComida.setSelectedItem(((ProductoComida)producto).obtenerMarca());
-                    cboModificarFabricantePComida.setSelectedItem(((ProductoComida)producto).obtenerFabricante());
-                    cboModificarRazaPComida.setSelectedItem(((ProductoComida)producto).obtenerRaza());
-                    cboModificarEtapaDeVidaPComida.setSelectedItem(((ProductoComida)producto).obtenerEtapaDeVida());
-                    cboModificarSaborPComida.setSelectedItem(((ProductoComida)producto).obtenerSabor());
-                    cboModificarContenedorPComida.setSelectedItem(((ProductoComida)producto).obtenerContenedor());
-                    cboModificarTipoPComida.setSelectedItem(((ProductoComida)producto).obtenerTipo());
-                    habilitarComponentesModificarPComida(true);
-                    txtIdModificarPComida.setEnabled(false);
-                    btnBuscarMPComida.setEnabled(false);
+                    txtModificarNombrePComida.setText(producto.obtener_nombre());
+                    txtModificarPrecioPComida.setText(String.valueOf(producto.obtener_precio()));
+                    txtModificarDescuentoPComida.setText(String.valueOf(producto.obtener_descuento()));
+                    spnModificarStockPComida.setValue(producto.obtener_stock());
+                    txtModificarDescripcionPComida.setText(producto.obtener_descripcion());
+                    cboModificarMarcaPComida.setSelectedItem(((ProductoComida)producto).obtener_marca());
+                    cboModificarFabricantePComida.setSelectedItem(((ProductoComida)producto).obtener_fabricante());
+                    cboModificarRazaPComida.setSelectedItem(((ProductoComida)producto).obtener_raza());
+                    cboModificarEtapaDeVidaPComida.setSelectedItem(((ProductoComida)producto).obtener_etapa_de_vida());
+                    cboModificarSaborPComida.setSelectedItem(((ProductoComida)producto).obtener_sabor());
+                    cboModificarContenedorPComida.setSelectedItem(((ProductoComida)producto).obtener_contenedor());
+                    cboModificarTipoPComida.setSelectedItem(((ProductoComida)producto).obtener_tipo());
+                    habilitar_componentes_modificar_comida(true);
                 }
             }
         });
-        btnLimpiarPComida2.addActionListener(new ActionListener() {
+        btn_limpiar_modificar_comida.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                limpiarModificarPComida();
+                limpiar_componentes_modificar_comida();
             }
         });
-        btnCancelarModificarPComida.addActionListener(new ActionListener() {
+        btn_cancelar_modificar_comida.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                limpiarModificarPComida();
-                habilitarComponentesModificarPComida(false);
-                btnBuscarMPComida.setEnabled(true);
-                txtIdModificarPComida.setEnabled(true);
+                limpiar_componentes_modificar_comida();
+                habilitar_componentes_modificar_comida(false);
             }
         });
             //ELIMINAR PRODCUTO - COMIDA
@@ -222,9 +219,9 @@ public class Ventana {
                 try{
                     Id identificador = new Id(txtEliminarPComida.getText());
 
-                    inventario.obtenerCatComida().eliminarProducto(identificador);
-                    actualizarTablaPComida(filtrarProductosComida());
-                    JOptionPane.showMessageDialog(null,"Producto eliminado");
+                    inventario.eliminarProducto("Categoria",identificador);
+                    actualizar_tabla_comida(filtrar_productos_comida());
+                    JOptionPane.showMessageDialog(null,"Inventario.Producto eliminado");
                 }catch (Exception ex){
                     JOptionPane.showMessageDialog(null,ex.getMessage(),
                             "Error",JOptionPane.ERROR_MESSAGE);
@@ -235,39 +232,39 @@ public class Ventana {
         btnBuscarPComida.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Producto producto = buscarProductoComida(txtBuscarPComida);
+                Producto producto = buscar_producto_comida(txtBuscarPComida);
                 if(producto!=null){
-                    modeloTablaPComida.setRowCount(0);
-                    if(cboMostrarPComida.getSelectedItem().equals("Características generales")){
-                        modeloTablaPComida.addRow(((ProductoComida)producto).obtenerAtributosGenerales());
+                    modelo_tabla_comida.setRowCount(0);
+                    if(cbo_mostrar_productos_comida.getSelectedItem().equals("Características generales")){
+                        modelo_tabla_comida.addRow(producto.obtener_atributos_generales());
                     }else{
-                        modeloTablaPComida.addRow(((ProductoComida)producto).obtenerAtributosEspecificos());
+                        modelo_tabla_comida.addRow(((ProductoComida)producto).obtener_atributos_especificos());
                     }
-                    tablaPComida.setModel(modeloTablaPComida);
-                    btnCancelarBusquedaPComida.setEnabled(true);
-                    btnConsultarPComida.setEnabled(true);
-                    cboFiltroPComida.setSelectedItem("Ninguno");
-                    cboFiltroPComida.setEnabled(false);
+                    tabla_producto_comida.setModel(modelo_tabla_comida);
+                    btn_cancelar_busqueda_comida.setEnabled(true);
+                    btn_consultar_producto_comida.setEnabled(true);
+                    cbo_filtro_comida.setSelectedItem("Ninguno");
+                    cbo_filtro_comida.setEnabled(false);
                     cboOrdenPComida.setSelectedItem("Ninguno");
                     cboOrdenPComida.setEnabled(false);
                 }
             }
         });
-        btnCancelarBusquedaPComida.addActionListener(new ActionListener() {
+        btn_cancelar_busqueda_comida.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 txtBuscarPComida.setText("");
-                actualizarTablaPComida(filtrarProductosComida());
-                btnCancelarBusquedaPComida.setEnabled(false);
-                btnConsultarPComida.setEnabled(false);
-                cboFiltroPComida.setEnabled(true);
+                actualizar_tabla_comida(filtrar_productos_comida());
+                btn_cancelar_busqueda_comida.setEnabled(false);
+                btn_consultar_producto_comida.setEnabled(false);
+                cbo_filtro_comida.setEnabled(true);
                 cboOrdenPComida.setEnabled(true);
             }
         });
-        btnConsultarPComida.addActionListener(new ActionListener() {
+        btn_consultar_producto_comida.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Producto producto = buscarProductoComida(txtBuscarPComida);
+                Producto producto = buscar_producto_comida(txtBuscarPComida);
                 String accesibilidad = "INHABILITADO DE LA TIENDA";
                 if(producto.obtenerAccesibilidad()){
                     accesibilidad = "HABILITADO EN LA TIENDA";
@@ -278,8 +275,8 @@ public class Ventana {
         btnFiltroPComida.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                inicializarTablaPComida();
-                actualizarTablaPComida(filtrarProductosComida());
+                inicializar_tabla_comida();
+                actualizar_tabla_comida(filtrar_productos_comida());
             }
         });
 
@@ -327,7 +324,7 @@ public class Ventana {
                 }
             }
         });
-        txtIdModificarPComida.addKeyListener(new KeyAdapter() {
+        txt_identificador_producto_comida.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
                 super.keyTyped(e);
@@ -358,38 +355,53 @@ public class Ventana {
                 }
             }
         });
+        button1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tabbedPane1.setEnabledAt(2,false);
+                tabbedPane1.setSelectedIndex(2);
+            }
+        });
     }
 
     //METODOS AUXILIARES - COMIDA
-        //AGREGAR PRODUCTO - COMIDA
-    public void inicializarAgregarPComida(){
-        Comida comida = inventario.obtenerCatComida();
-        for(String s: comida.obtenerEspecies()){
-            cboAgregarEspeciePComida.addItem(s);
+    public boolean verificar_campos_de_texto(String[] campos_de_texto){
+        boolean aux = false;
+        for(String s: campos_de_texto){
+            aux = aux || s.isEmpty();
         }
-        for(String s: comida.obtenerMARCA()){
+        return aux;
+    }
+        //AGREGAR PRODUCTO - COMIDA
+    public void inicializar_componentes_agregar_comida(){
+        Comida comida = (Comida) inventario.obtenerCategoria("Comida");
+        //INICIALIZAR COMBOBOX's
+        for(Object o: inventario.obtenerMascotas()){
+            cboAgregarEspeciePComida.addItem(o.toString());
+        }
+        for(String s: comida.obtener_marca()){
             cboAgregarMarcaPComida.addItem(s);
         }
-        for(String s: comida.obtenerFABRICANTE()){
+        for(String s: comida.obtener_fabricante()){
             cboAgregarFabricantePComida.addItem(s);
         }
-        for(String s: comida.obtenerRAZA()){
+        for(String s: comida.obtener_raza()){
             cboAgregarRazaPComida.addItem(s);
         }
-        for(String s: comida.obtenerSABOR()){
+        for(String s: comida.obtener_sabor()){
             cboAgregarSaborPComida.addItem(s);
         }
-        for(String s: comida.obtenerCONTENEDOR()){
+        for(String s: comida.obtener_contenedor()){
             cboAgregarContenedorPComiad.addItem(s);
         }
-        for(String s: comida.obtenerETAPADEVIDA()){
+        for(String s: comida.obtener_etapa_de_vida()){
             cboAgregarEtapaDeVidaPComida.addItem(s);
         }
-        for(String s: comida.obtenerTIPO()){
+        for(String s: comida.obtener_tipo()){
             cboAgregarTipoPComida.addItem(s);
         }
     }
-    public void limpiarAgregarPComida(){
+    public void limpiar_componentes_agregar_comida(){
         cboAgregarEspeciePComida.setSelectedIndex(0);
         txtAgregarNombrePComida.setText("");
         txtAgregarPrecioPComida.setText("");
@@ -404,9 +416,8 @@ public class Ventana {
         cboAgregarContenedorPComiad.setSelectedIndex(0);
         cboAgregarTipoPComida.setSelectedIndex(0);
     }
-        //ELIMINAR PRODUCTO - COMIDA
         //MODIFICAR PRODUCTO - COMIDA
-    public void habilitarComponentesModificarPComida(boolean b){
+    public void habilitar_componentes_modificar_comida(boolean b){
             txtModificarNombrePComida.setEnabled(b);
             txtModificarPrecioPComida.setEnabled(b);
             txtModificarDescuentoPComida.setEnabled(b);
@@ -419,36 +430,39 @@ public class Ventana {
             cboModificarSaborPComida.setEnabled(b);
             cboModificarContenedorPComida.setEnabled(b);
             cboModificarTipoPComida.setEnabled(b);
-            btnLimpiarPComida2.setEnabled(b);
+            btn_limpiar_modificar_comida.setEnabled(b);
             btnModificarPComida.setEnabled(b);
-            btnCancelarModificarPComida.setEnabled(b);
+            btn_cancelar_modificar_comida.setEnabled(b);
+            btn_buscar_modificar_comida.setEnabled(!b);
+            txt_identificador_producto_comida.setEnabled(!b);
     }
-    public void inicializarComponentesModificarPComida(){
-        habilitarComponentesModificarPComida(false);
-        Comida comida = inventario.obtenerCatComida();
-        for(String s: comida.obtenerMARCA()){
+    public void inicializar_componentes_modificar_comida(){
+        habilitar_componentes_modificar_comida(false);
+        //INICIALIZAR COMBOBOX's
+        Comida comida = (Comida) inventario.obtenerCategoria("Comida");
+        for(String s: comida.obtener_marca()){
             cboModificarMarcaPComida.addItem(s);
         }
-        for(String s: comida.obtenerFABRICANTE()){
+        for(String s: comida.obtener_fabricante()){
             cboModificarFabricantePComida.addItem(s);
         }
-        for(String s: comida.obtenerRAZA()){
+        for(String s: comida.obtener_raza()){
             cboModificarRazaPComida.addItem(s);
         }
-        for(String s: comida.obtenerSABOR()){
+        for(String s: comida.obtener_sabor()){
             cboModificarSaborPComida.addItem(s);
         }
-        for(String s: comida.obtenerCONTENEDOR()){
+        for(String s: comida.obtener_contenedor()){
             cboModificarContenedorPComida.addItem(s);
         }
-        for(String s: comida.obtenerETAPADEVIDA()){
+        for(String s: comida.obtener_etapa_de_vida()){
             cboModificarEtapaDeVidaPComida.addItem(s);
         }
-        for(String s: comida.obtenerTIPO()){
+        for(String s: comida.obtener_tipo()){
             cboModificarTipoPComida.addItem(s);
         }
     }
-    public void limpiarModificarPComida(){
+    public void limpiar_componentes_modificar_comida(){
         txtModificarNombrePComida.setText("");
         txtModificarPrecioPComida.setText("");
         txtModificarDescuentoPComida.setText("");
@@ -463,10 +477,20 @@ public class Ventana {
         cboModificarTipoPComida.setSelectedIndex(0);
     }
         //BUSCAR PRODUCTO - COMIDA
-    public Producto buscarProductoComida(JTextField campoTexto){
+    public void inicializar_componentes_lista_productos(){
+        //INICIALIZAR COMBOBOX's
+        cbo_filtro_comida.addItem("Ninguno");
+        for(Object s: inventario.obtenerMascotas()){
+            cbo_filtro_comida.addItem(s);
+        }
+        actualizar_tabla_comida(filtrar_productos_comida());
+        btn_cancelar_busqueda_comida.setEnabled(false);
+        btn_consultar_producto_comida.setEnabled(false);
+    }
+    public Producto buscar_producto_comida(JTextField campo_de_texto){
         try {
-            Id identificador = new Id(campoTexto.getText());
-            Producto producto = inventario.obtenerCatComida().buscarProducto(identificador);
+            Id identificador = new Id(campo_de_texto.getText());
+            Producto producto = inventario.buscarProducto("Comida",identificador);
             return producto;
         }catch (Exception ex){
             JOptionPane.showMessageDialog(null, ex.getMessage(),
@@ -475,72 +499,70 @@ public class Ventana {
         return null;
     }
         //MOSTRAR PRODUCTOS = COMIDA
-    public void inicializarTablaPComida(){
-        modeloTablaPComida.setColumnCount(0);
-        if(cboMostrarPComida.getSelectedItem().equals("Características generales")){
-            modeloTablaPComida.addColumn("ID");
-            modeloTablaPComida.addColumn("NOMBRE");
-            modeloTablaPComida.addColumn("ESPECIE");
-            modeloTablaPComida.addColumn("PRECIO");
-            modeloTablaPComida.addColumn("DESCUENTO");
-            modeloTablaPComida.addColumn("STOCK");
-            modeloTablaPComida.addColumn("UNIDADES VENDIDAS");
-            modeloTablaPComida.addColumn("CALIFICACIÓN");
-            modeloTablaPComida.addColumn("DESCRIPCIÓN");
+    public void inicializar_tabla_comida(){
+        tabla_producto_comida.setEnabled(false);
+        modelo_tabla_comida.setColumnCount(0);
+        if(String.valueOf(cbo_mostrar_productos_comida.getSelectedItem())
+                .compareToIgnoreCase("Características generales")==0){
+            modelo_tabla_comida.addColumn("Id");
+            modelo_tabla_comida.addColumn("Nombre");
+            modelo_tabla_comida.addColumn("Macota");
+            modelo_tabla_comida.addColumn("Precio");
+            modelo_tabla_comida.addColumn("Descuento");
+            modelo_tabla_comida.addColumn("Stock");
+            modelo_tabla_comida.addColumn("Unidades vendidas");
+            modelo_tabla_comida.addColumn("Calificación");
+            modelo_tabla_comida.addColumn("Descripción");
         }else{
-            modeloTablaPComida.addColumn("ID");
-            modeloTablaPComida.addColumn("MARCA");
-            modeloTablaPComida.addColumn("FABRICANTE");
-            modeloTablaPComida.addColumn("RAZA");
-            modeloTablaPComida.addColumn("SABOR");
-            modeloTablaPComida.addColumn("CONTENEDOR");
-            modeloTablaPComida.addColumn("ETAPA DE VIDA");
-            modeloTablaPComida.addColumn("TIPO");
+            modelo_tabla_comida.addColumn("Id");
+            modelo_tabla_comida.addColumn("Marca");
+            modelo_tabla_comida.addColumn("Fabricante");
+            modelo_tabla_comida.addColumn("Raza");
+            modelo_tabla_comida.addColumn("Sabor");
+            modelo_tabla_comida.addColumn("Contenedor");
+            modelo_tabla_comida.addColumn("Etapa de vida");
+            modelo_tabla_comida.addColumn("Tipo");
         }
-
-        tablaPComida.setModel(modeloTablaPComida);
+        tabla_producto_comida.setModel(modelo_tabla_comida);
     }
-    public void actualizarTablaPComida(Object[] productos){
-        modeloTablaPComida.setRowCount(0);
-        if(cboMostrarPComida.getSelectedItem().equals("Características generales")){
+    public void actualizar_tabla_comida(Object[] productos){
+        modelo_tabla_comida.setRowCount(0);
+        if(String.valueOf(cbo_mostrar_productos_comida.getSelectedItem()).
+                compareToIgnoreCase("Características generales")==0){
             for(Object o: productos){
-                modeloTablaPComida.addRow(((ProductoComida)o).obtenerAtributosGenerales());
+                modelo_tabla_comida.addRow(((ProductoComida)o).obtener_atributos_generales());
             }
         }else{
             for(Object o: productos){
-                modeloTablaPComida.addRow(((ProductoComida)o).obtenerAtributosEspecificos());
+                modelo_tabla_comida.addRow(((ProductoComida)o).obtener_atributos_especificos());
             }
         }
     }
-    public Object[] filtrarProductosComida(){
-        modeloTablaPComida.setRowCount(0);
-        String filtro = String.valueOf(cboFiltroPComida.getSelectedItem());
+    public Object[] filtrar_productos_comida(){
+        modelo_tabla_comida.setRowCount(0);
+        String filtro = String.valueOf(cbo_filtro_comida.getSelectedItem());
         Object[] productos;
         if(!txtBuscarPComida.getText().isEmpty()){
-            Producto producto = buscarProductoComida(txtBuscarPComida);
+            Producto producto = buscar_producto_comida(txtBuscarPComida);
             return new Object[] {producto};
         }
         if(filtro.equals("Ninguno")){
-            productos = inventario.obtenerCatComida().obtenerProductos();
+            productos = inventario.obtenerCategoria("Comida").obtenerProductos();
         }else{
-            productos = inventario.obtenerCatComida().filtrarEspecieMascota(filtro);
+            productos = inventario.obtenerCategoria("Comida").filtrar_por_mascota(filtro);
         }
-        ordenarProductosComida(productos);
+        ordenar_productos_comida(productos);
         return productos;
     }
-    public void ordenarProductosComida(Object[] productos){
+    public void ordenar_productos_comida(Object[] productos){
         if(cboOrdenPComida.getSelectedIndex()==1){
-            inventario.obtenerCatComida().ordenarPorPrecio(productos);
+            inventario.obtenerCategoria("Comida").ordenar_por_precio(productos);
         } else if (cboOrdenPComida.getSelectedIndex()==2) {
-            inventario.obtenerCatComida().ordenarPorStock(productos);
+            inventario.obtenerCategoria("Comida").ordenar_por_stock(productos);
         } else if (cboOrdenPComida.getSelectedIndex()==3) {
-            inventario.obtenerCatComida().ordenarUnVendidas(productos);
+            inventario.obtenerCategoria("Comida").ordenar_por_unidades_vendidas(productos);
         }else if(cboOrdenPComida.getSelectedIndex()==4){
-            inventario.obtenerCatComida().ordenarCalificacion(productos);
+            inventario.obtenerCategoria("Comida").ordenar_por_calificacion(productos);
         }
     }
-
-    //ACCESORIO
-    //INSUMO MEDICO
-
 }

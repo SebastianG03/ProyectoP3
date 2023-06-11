@@ -4,6 +4,8 @@ public class ProductoInsMedico extends Producto{
     String marca;
     String fabricante;
     String tipo;
+
+    //CONSTRUCTOR
     public  ProductoInsMedico(String categoria, String especie, String nombre, double precio, double descuento, int stock,
                               String descripcion, String marca, String fabricante, String tipo){
         super(categoria,especie,nombre,precio,descuento,stock,descripcion);
@@ -12,31 +14,27 @@ public class ProductoInsMedico extends Producto{
         this.tipo = tipo;
     }
     //METODOS ESTABLECER
-    public void establecerMarca(String marca) {
+    public void establecer_marca(String marca) {
         this.marca = marca;
     }
-    public void establecerFabricante(String fabricante) {
+    public void establecer_fabricante(String fabricante) {
         this.fabricante = fabricante;
     }
-    public void establecerTipo(String tipo) {
+    public void establecer_tipo(String tipo) {
         this.tipo = tipo;
     }
 
     //METODOS OBTENER
-    public String obtenerMarca() {
+    public String obtener_marca() {
         return marca;
     }
-    public String obtenerFabricante() {
+    public String obtener_fabricante() {
         return fabricante;
     }
-    public String obtenerTipo() {
+    public String obtener_tipo() {
         return tipo;
     }
-    public Object[] obtenerAtributosGenerales(){
-        return new Object[] {obtenerId().toString(), obtenerNombre(), obtenerEspecie(),obtenerPrecio(),
-                obtenerDescuento(), obtenerStock(), obtenerUnVenidas(), obtenerCalificacion(), obtenerDescripcion()};
-    }
-    public Object[] obtenerAtributosEspecificos(){
-        return new Object[] {};
+    public Object[] obtener_atributos_especificos(){
+        return new Object[] {obtener_id(),this.marca,this.fabricante,this.tipo};
     }
 }

@@ -4,27 +4,29 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Vector;
 
-public abstract class Producto implements Comparable {
-    private Id identificador; // atributo con el que se va a trackear el producto en el sistema
-    private String nombre;// atributo que se presentará al producto a traves de la interfaz
-    private String categoria; // puede ser: comida, accesorio e insumo médico
-    private String especie; // puede ser: perro, gato y conejo
-    private double precio; // precio del producto
+public abstract class Producto implements Comparable{
+    private Id identificador; // Atributo con el que se va a trackear el producto en el sistema
+    private String nombre;
+    private String categoria; // Puede ser: comida, accesorio e insumo médico
+    private String mascota; // Puede ser: perro, gato y conejo
+    private double precio;
     private double descuento;
-    private int stock; // debe tener un limite?
-    private int unidadesVendidas; // cuando sea igual a cero se evita que se compre mas
-    private int calificacion; // del 1 al 5, siendo 5 la mejor valoracion
-    private String descripcion; // descripción detallada del producto
+    private int stock; // Cuando sea igual a cero se deshabilita de la tienda
+    private int unidadesVendidas;
+    private int calificacion; // Del 1 al 5, siendo 5 la mejor valoracion
+    private String descripcion; // Descripción detallada del producto
+
     private List<Integer> vector;
     private DecimalFormat decimalFormat = new DecimalFormat("#." + "0".repeat(2));
 
-    public Producto (String categoria, String especie, String nombre, double precio, double descuento,
+    //CONSTRUCTOR
+    public Producto (String categoria, String mascota, String nombre, double precio, double descuento,
                      int stock, String descripcion){
         String formattedPrecio = decimalFormat.format(precio);
         String formattedDescuento = decimalFormat.format(descuento);
 
         this.categoria = categoria;
-        this.especie = especie;
+        this.mascota = mascota;
         this.nombre = nombre;
         this.precio = Double.parseDouble((formattedPrecio.contains(","))? formattedPrecio.replace(",", ".") : formattedPrecio);
         this.descuento = Double.parseDouble((formattedDescuento.contains(","))? formattedDescuento.replace(",", ".") : formattedDescuento);
@@ -36,70 +38,76 @@ public abstract class Producto implements Comparable {
     }
 
     //METODOS ESTABLECER
-    public void establecerIdentificador(int identificadorEspecie, int desplazamiento){
-        identificador = new Id(identificadorEspecie,desplazamiento);
+    public void identificador(int categoria, int mascota, int indice){
+        identificador = new Id(categoria,mascota,indice);
     }
-    public void establecerDesplazamiento(int desplazamiento){
-        this.identificador.establecerDesplazamiento(desplazamiento);
+    public void establecer_desplazamiento(int desplazamiento){
+        this.identificador.establecer_desplazamiento(desplazamiento);
     }
-    public void establecerNombre(String nombre){
+    public void establecer_nombre(String nombre){
         this.nombre = nombre;
     }
-    public void establecerPrecio(double precio){
+    public void establecer_precio(double precio){
         this.precio = precio;
     }
-    public void establecerDescuento(double descuento){
+    public void establecer_descuento(double descuento){
         this.descuento = descuento;
     }
-    public void establecerStock(int stock){
+    public void establecer_stock(int stock){
         this.stock = stock;
     }
-    public void establecerDescripcion(String descripcion){
+    public void establecer_descripcion(String descripcion){
         this.descripcion = descripcion;
     }
 
     //METODOS OBTENER
-    public String obtenerNombre(){
+    public String obtenerCategoria(){
+        return this.categoria;
+    }
+    public String obtener_nombre(){
         return this.nombre;
     }
-    public double obtenerDescuento(){
+    public double obtener_descuento(){
         return this.descuento;
     }
-    public String obtenerEspecie(){
-        return this.especie;
+    public String obtener_mascota(){
+        return this.mascota;
     }
-    public int obtenerIdentificador(){
-        return identificador.obtenerIdentificador();
+    public int obtener_identificador(){
+        return identificador.obtener_identificador();
     }
-    public Id obtenerId(){
+    public Id obtener_id(){
         return this.identificador;
     }
-    public double obtenerPrecio(){
+    public double obtener_precio(){
         return this.precio;
     }
-    public int obtenerStock(){
+    public int obtener_stock(){
         return this.stock;
     }
-    public int obtenerUnVenidas(){
+    public int obtener_unidades_vendidas(){
         return this.unidadesVendidas;
     }
-    public int obtenerCalificacion(){
+    public int obtener_calificacion(){
         return this.calificacion;
     }
-    public String obtenerDescripcion(){
+    public String obtener_descripcion(){
         return this.descripcion;
     }
-    public List<Integer> obtenerVector(){
+    public List<Integer> obtener_vector(){
         return this.vector;
     }
-    abstract Object[] obtenerAtributosGenerales();
-    abstract Object[] obtenerAtributosEspecificos();
+    public Object[] obtener_atributos_generales(){
+        return new Object[] {this.identificador, this.nombre, this.mascota, this.precio, this.descuento,
+        this.stock, this.unidadesVendidas, this.calificacion, this.descripcion};
+    }
+    abstract Object[] obtener_atributos_especificos();
 
     //METODOS AUXILIARES
-    public void restarStock(int cantidad){
+    public void restar_stock(int cantidad){
         this.stock -= cantidad;
     }
-    public void aumentarUnVendidas(int cantidad){
+    public void aumentar_unidades_vendidas(int cantidad){
         this.unidadesVendidas += cantidad;
     }
     public boolean obtenerAccesibilidad(){
@@ -112,8 +120,8 @@ public abstract class Producto implements Comparable {
     @Override
     public int compareTo(Object o) {
         Producto p = (Producto)o;
-        int id1 = this.identificador.obtenerIdentificador();
-        int id2 = ((Producto) o).obtenerIdentificador();
+        int id1 = this.identificador.obtener_identificador();
+        int id2 = ((Producto) o).obtener_identificador();
 
         //Evita que se introduzcan productos con el mismo nombre o desccripción
         if(p.nombre.equals(this.nombre) || p.descripcion.equals(this.descripcion)){
@@ -132,6 +140,8 @@ public abstract class Producto implements Comparable {
                 Nombre: %s\n
                 Precio: $ %s\n
                 Descuento: %s\n
-                s""",nombre,precio,descuento*100 + "%",stock);
+                Stock: %s\n
+                Unidades vendidas %s\n
+                Calificacion: %s""",nombre,precio,descuento*100 + "%",stock,unidadesVendidas,calificacion);
     }
 }

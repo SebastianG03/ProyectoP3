@@ -5,6 +5,8 @@ public class ProductoAccesorio extends Producto{
     private String fabricante;
     private String tipo;
     private String etapaDeVida;
+
+    //CONSTRUCTOR
     public ProductoAccesorio(String categoria, String especie, String nombre, double precio, double descuento, int stock,
                              String descripcion, String marca, String fabricante, String tipo, String etapaDeVida){
         super(categoria,especie,nombre,precio,descuento,stock,descripcion);
@@ -15,38 +17,33 @@ public class ProductoAccesorio extends Producto{
     }
 
     //METODOS ETABLECER
-    public void establecerMarca(String marca){
+    public void establecer_marca(String marca){
         this.marca = marca;
     }
-    public void establecerFabricante(String fabricante){
+    public void establecer_fabricante(String fabricante){
         this.fabricante = fabricante;
     }
-    public void establecerTipo(String tipo){
+    public void establecer_tipo(String tipo){
         this.tipo = tipo;
     }
-    public void establecerEtapaDeVida(String etapaDeVida){
+    public void establecer_etapa_de_vida(String etapaDeVida){
         this.etapaDeVida = etapaDeVida;
     }
 
     //METODOS OBTENER
-    public String obtenerMarca(){
+    public String obtener_marca(){
         return this.marca;
     }
-    public String obtenerFabricante(){
+    public String obtener_fabricante(){
         return  this.fabricante;
     }
-    public String obtenerTipo(){
+    public String obtener_tipo(){
         return this.tipo;
     }
-    public String obtenerEtapaDeVida(){
+    public String obtener_etapa_de_vida(){
         return this.etapaDeVida;
     }
-    public Object[] obtenerAtributosGenerales(){
-        return new Object[] {obtenerId().toString(), obtenerNombre(), obtenerEspecie(),obtenerPrecio(),
-                obtenerDescuento(), obtenerStock(), obtenerUnVenidas(), obtenerCalificacion(), obtenerDescripcion()};
+    public Object[] obtener_atributos_especificos(){
+        return new Object[] {obtener_id(),this.marca,this.fabricante,this.etapaDeVida,this.tipo};
     }
-    public Object[] obtenerAtributosEspecificos(){
-        return new Object[] {};
-    }
-
 }

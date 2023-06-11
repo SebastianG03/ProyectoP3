@@ -1,4 +1,5 @@
 package Inventario.Categoria;
+
 import Producto.*;
 
 import javax.swing.*;
@@ -10,76 +11,92 @@ public class Accesorio extends Categoria{
     private final String[] FABRICANTE = {"Bunfly", "Dimaka"};
     private final String[] TIPO = {"Juguete", "Ropa", "Adiestramiento", "Higiene", "Mobiliario", "Estética"};
     private final String[] ETAPADEVIDA = {"Cachorro", "Adulto"};
-    public Accesorio(){
-        insertarProductosDefecto();
+
+    //CONSTRUCTOR
+    public Accesorio(String[] mascotas){
+        super(mascotas);
+        productos_por_defecto();
     }
-    public void modificarProducto(Id identificador, String marca, String fabricante, String tipo, String etapaDeVida){
-        Object[] arregloProductos = productos.toArray();
+
+    //METODOS OBTENER
+    public String[] obtenerMarca(){
+        return this.MARCA;
+    }
+    public String[] obtenerFabricante(){
+        return  this.FABRICANTE;
+    }
+    public String[] obtenerTipo(){
+        return this.TIPO;
+    }
+    public String[] obtenerEtapaDeVida(){
+        return this.ETAPADEVIDA;
+    }
+
+    //OPERACIONES BÁSICAS
+    public void modificarProductoAccesorio(Id identificador, String marca, String fabricante, String tipo, String etapaDeVida){
         try{
-            ProductoAccesorio aModificar = (ProductoAccesorio) arregloProductos[busquedaBinaria(arregloProductos,identificador)];
-            aModificar.establecerMarca(marca);
-            aModificar.establecerFabricante(fabricante);
-            aModificar.establecerTipo(tipo);
-            aModificar.establecerEtapaDeVida(etapaDeVida);
+            ProductoAccesorio modificado = (ProductoAccesorio) buscar_producto(identificador);
+            modificado.establecer_marca(marca);
+            modificado.establecer_fabricante(fabricante);
+            modificado.establecer_tipo(tipo);
+            modificado.establecer_etapa_de_vida(etapaDeVida);
         }catch (Exception ex){
             JOptionPane.showMessageDialog(null,ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
         }
     }
-
-    //VECTORIZAR PRODUCTO
-    public void vectorizarProducto(Producto aVectorizar){
-        vectorizarMarca((ProductoAccesorio) aVectorizar);
-        vectorizarFabricante((ProductoAccesorio) aVectorizar);
-        vectorizarTipo((ProductoAccesorio) aVectorizar);
-        vectorizarEtapaVida((ProductoAccesorio) aVectorizar);
+    public void vectorizar_producto(Producto aVectorizar){
+        vectorizar_marca((ProductoAccesorio) aVectorizar);
+        vectorizar_fabricante((ProductoAccesorio) aVectorizar);
+        vectorizar_tipo((ProductoAccesorio) aVectorizar);
+        vectorizar_etapa_de_vida((ProductoAccesorio) aVectorizar);
     }
 
     //METODOS AUXILIARES
-    private void vectorizarMarca(ProductoAccesorio aVectorizar){
-        List<Integer> vector = aVectorizar.obtenerVector();
+    private void vectorizar_marca(ProductoAccesorio aVectorizar){
+        List<Integer> vector = aVectorizar.obtener_vector();
         for(String m: MARCA){
-            if(aVectorizar.obtenerMarca().equals(m)){
+            if(aVectorizar.obtener_marca().equals(m)){
                 vector.add(1);
             }else{
                 vector.add(0);
             }
         }
     }
-    private void vectorizarFabricante(ProductoAccesorio aVectorizar){
-        List<Integer> vector = aVectorizar.obtenerVector();
+    private void vectorizar_fabricante(ProductoAccesorio aVectorizar){
+        List<Integer> vector = aVectorizar.obtener_vector();
         for(String f: FABRICANTE){
-            if(aVectorizar.obtenerFabricante().equals(f)){
+            if(aVectorizar.obtener_fabricante().equals(f)){
                 vector.add(1);
             }else{
                 vector.add(0);
             }
         }
     }
-    private void vectorizarTipo(ProductoAccesorio aVectorizar){
-        List<Integer> vector = aVectorizar.obtenerVector();
+    private void vectorizar_tipo(ProductoAccesorio aVectorizar){
+        List<Integer> vector = aVectorizar.obtener_vector();
         for(String t: TIPO){
-            if(aVectorizar.obtenerTipo().equals(t)){
+            if(aVectorizar.obtener_tipo().equals(t)){
                 vector.add(1);
             }else{
                 vector.add(0);
             }
         }
     }
-    private void vectorizarEtapaVida(ProductoAccesorio aVectorizar){
-        List<Integer> vector = aVectorizar.obtenerVector();
+    private void vectorizar_etapa_de_vida(ProductoAccesorio aVectorizar){
+        List<Integer> vector = aVectorizar.obtener_vector();
         for(String e: ETAPADEVIDA){
-            if(aVectorizar.obtenerEtapaDeVida().equals(e)){
+            if(aVectorizar.obtener_etapa_de_vida().equals(e)){
                 vector.add(1);
             }else{
                 vector.add(0);
             }
         }
     }
-    public void insertarProductosDefecto(){
+
+    public void productos_por_defecto(){
         Random generador = new Random();
-        for(int i=0; i<10; i++){
-            String texto = "";
-            String especie = ESPECIES[generador.nextInt(0,ESPECIES.length)];
+        for(int i=0; i<5; i++){
+            String especie = (String) MASCOTAS.keySet().toArray()[generador.nextInt(0,MASCOTAS.size())];
             String marca = MARCA[generador.nextInt(0,MARCA.length)];
             String fabricante = FABRICANTE[generador.nextInt(0,FABRICANTE.length)];
             String etapaVida = ETAPADEVIDA[generador.nextInt(0,ETAPADEVIDA.length)];
@@ -87,14 +104,19 @@ public class Accesorio extends Categoria{
             double precio = generador.nextDouble(1,9.99);
             double descuento = generador.nextDouble(0,0.40);
             int stock = generador.nextInt(1,999);
-            for(int j=0; j<5 ; j++){
-                char c = (char)(generador.nextInt(5) + 'a');
-                texto += c;
-            }
-            ProductoAccesorio productoAccesorio= new ProductoAccesorio("Accesorio",especie,texto,precio,descuento,
-                    stock,texto,marca,fabricante,tipo,etapaVida);
-            agregarProducto(productoAccesorio);
-            vectorizarProducto(productoAccesorio);
+
+            String nombre = String.format("%s para %s %s",
+                    tipo,especie,etapaVida);
+            String descripcion = String.format("""
+                            %s para %s %s,
+                            marca %s,
+                            fabricante %s.""",
+                    tipo,especie,etapaVida,marca,fabricante);
+
+            ProductoAccesorio productoAccesorio= new ProductoAccesorio("Accesorio",especie,nombre,precio,descuento,
+                    stock,descripcion,marca,fabricante,tipo,etapaVida);
+            agregar_producto(1,productoAccesorio);
+            vectorizar_producto(productoAccesorio);
         }
     }
 }

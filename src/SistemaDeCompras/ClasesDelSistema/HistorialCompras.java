@@ -27,6 +27,7 @@ public class HistorialCompras {
 
     public String imprimirPaquetesNuevos() {
         StringBuilder sb = new StringBuilder();
+
         paquetesNuevos.stream().map(x -> sb.append(x.toString()));
         return sb.toString();
     }

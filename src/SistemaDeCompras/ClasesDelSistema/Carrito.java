@@ -1,20 +1,22 @@
 package SistemaDeCompras.ClasesDelSistema;
 
-import Inventario.Categoria.*;
 import Producto.Id;
 import Producto.Producto;
+import Inventario.Categoria.Categoria;
+import Inventario.Inventario;
 
 import java.text.DecimalFormat;
 import java.util.*;
 
 public class Carrito {
 
-    public Date date;
-    public Map<Producto, Integer> carrito;
-    public Categoria categoria;
+    private Date date;
+    private Map<Producto, Integer> carrito;
+    private Categoria categoria;
     private Inventario inventario;
     private Usuario usuario;
     private int size;
+
     public Carrito(Inventario inventario) {
         this.inventario = inventario;
         carrito = new HashMap<>();
@@ -24,13 +26,12 @@ public class Carrito {
 
     //Agrega el producto a la lista
     public void agregarProducto(Id id, int cantidad) throws Exception {
-        Producto producto = buscarNoNulo(inventario.obtenerCatComida().buscarProducto(id),
-                inventario.obtenerCatAccesorio().buscarProducto(id),
-                inventario.obtenerCatInsMedico().buscarProducto(id));
+        Producto producto = categoria.buscar_producto(id);
+//                buscarNoNulo(inventario.obtener_categoria_comida().buscar_producto(id),
+//                inventario.obtener_categoria_accesorio().buscar_producto(id),
+//                inventario.obtener_insumo_medico().buscar_producto(id));
 
-        if(producto == null) throw new Exception("Producto no encontrado");
-
-        if(cantidad < producto.obtenerStock()) {
+        if(cantidad < producto.obtener_stock()) {
             carrito.put(producto, cantidad);
             ++size;
         } else {
@@ -38,9 +39,6 @@ public class Carrito {
         }
     }
 
-    private Producto buscarNoNulo(Producto p1, Producto p2, Producto p3) {
-        return (p1 != null) ? p1 : (p2 != null) ? p2 : p3;
-    }
 
 //    public void agregarProductoComida(Id id, int cantidad) throws Exception {
 //        Producto producto = inventario.obtenerCatComida().buscarProducto(id);
@@ -92,18 +90,18 @@ public class Carrito {
 //    }
 
 
-    public void modificarCantidad(Id id, int cantidad) throws Exception {
-        Producto producto = categoria.buscarProducto(id);
-        int anteriorCantidad = obtenerCantidadEnCarro(id);
-        if(cantidad < producto.obtenerStock()) {
-            carrito.replace(producto, anteriorCantidad, cantidad);
+    public void modificarCantidad(Id id, int cantidadAnterior) throws Exception {
+        Producto producto = categoria.buscar_producto(id);
+        int cantidadEnCarro = obtenerCantidadEnCarro(id);
+        if(cantidadAnterior < producto.obtener_stock()) {
+            carrito.replace(producto, cantidadEnCarro, cantidadAnterior);
         } else
             throw new Exception("Cantidad en stock insuficiente.");
     }
 
     public void modificarCantidad(Producto producto, int cantidad) throws Exception {
         int anteriorCantidad = obtenerCantidadEnCarro(producto);
-        if(cantidad < producto.obtenerStock()) {
+        if(cantidad < producto.obtener_stock()) {
             carrito.replace(producto, anteriorCantidad, cantidad);
         } else
             throw new Exception("Cantidad en stock insuficiente.");
@@ -117,7 +115,7 @@ public class Carrito {
     }
 
     public int obtenerCantidadEnCarro(Id id) throws Exception {
-        Producto producto = categoria.buscarProducto(id);
+        Producto producto = categoria.buscar_producto(id);
         return (int) carrito.get(producto);
     }
 
@@ -125,11 +123,10 @@ public class Carrito {
         return carrito.get(producto);
     }
 
-
     public float calcularSubTotal(){
         float subtotal = 0;
         for(Map.Entry<Producto, Integer> e : carrito.entrySet()) {
-            subtotal += (e.getValue() * e.getKey().obtenerPrecio());
+            subtotal += (e.getValue() * e.getKey().obtener_precio());
         }
         return subtotal;
     }
@@ -138,7 +135,7 @@ public class Carrito {
     public float descuento() {
         float descuento = 0;
         for(Map.Entry<Producto, Integer> e : carrito.entrySet()) {
-            descuento += (e.getValue() * e.getKey().obtenerPrecio() * e.getKey().obtenerDescuento());
+            descuento += (e.getValue() * e.getKey().obtener_precio() * e.getKey().obtener_descuento());
         }
         return descuento;
     }
@@ -171,10 +168,10 @@ public class Carrito {
         //Ingresa los datos del carrito al StringBuilder
         for(Map.Entry<Producto, Integer> e : carrito.entrySet()) {
             producto = e.getKey();
-            sb.append(String.format(format, producto.obtenerId().toString(),
-                    producto.obtenerNombre(),
+            sb.append(String.format(format, producto.obtener_id().toString(),
+                    producto.obtener_nombre(),
                     e.getValue(),
-                    producto.obtenerPrecio()));
+                    producto.obtener_precio()));
         }
 
         return sb.toString();
@@ -225,12 +222,6 @@ public class Carrito {
         return productos;
     }
 
-//    public Producto getProducto(Id id) {
-//        Producto producto = getProductos().stream().filter(x -> x.obtenerId() == id).findFirst().get();
-//        return
-//    }
-
-
 
     public String imprimirDatosGenerales() {
         return "Pedido de:" + usuario.getNombre() +
@@ -251,8 +242,8 @@ public class Carrito {
         //Ingresa los datos del carrito al StringBuilder
         for(Map.Entry<Producto, Integer> e : carrito.entrySet()) {
             producto = e.getKey();
-            sb.append(String.format(format, producto.obtenerId().toString(),
-                    producto.obtenerNombre(),
+            sb.append(String.format(format, producto.obtener_id().toString(),
+                    producto.obtener_nombre(),
                     e.getValue()));
         }
 

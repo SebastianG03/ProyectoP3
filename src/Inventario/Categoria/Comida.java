@@ -1,138 +1,142 @@
 package Inventario.Categoria;
+
 import Producto.*;
 
 import javax.swing.*;
 import java.util.List;
 import java.util.Random;
 
-public class Comida extends Categoria {
+public class Comida extends Categoria{
     private final String[] MARCA = {"DogChow", "HappyCat"};
     private final String[] FABRICANTE = {"RoyalCanin", "Purina"};
     private final String[] RAZA = {"Todas las razas", "Razas grandes", "Razas medianas", "Razas Pequeñas"};
     private final String[] SABOR = {"Tocino", "Carne", "Pollo", "Pescado"};
     private final String[] CONTENEDOR = {"Bolsa", "Lata"};
-    private final String[] ETAPADEVIDA = {"Bebé", "Adulto"};
+    private final String[] ETAPADEVIDA = {"Cachorro", "Adulto"};
     private final String[] TIPO = {"Balanceado", "Comida húmeda", "Comida cruda", "Comida especializada"};
-    public Comida(){
-        insertarProductosDefecto();
+
+    //CONSTRUCTOR
+    public Comida(String[] mascotas){
+        super(mascotas);
+        productos_por_defecto();
     }
 
     //METODOS OBTENER
-    public String[] obtenerMARCA() {
+    public String[] obtener_marca() {
         return MARCA;
     }
-    public String[] obtenerFABRICANTE() {
+    public String[] obtener_fabricante() {
         return FABRICANTE;
     }
-    public String[] obtenerRAZA() {
+    public String[] obtener_raza() {
         return RAZA;
     }
-    public String[] obtenerSABOR() {
+    public String[] obtener_sabor() {
         return SABOR;
     }
-    public String[] obtenerCONTENEDOR() {
+    public String[] obtener_contenedor() {
         return CONTENEDOR;
     }
-    public String[] obtenerETAPADEVIDA() {
+    public String[] obtener_etapa_de_vida() {
         return ETAPADEVIDA;
     }
-    public String[] obtenerTIPO() {
+    public String[] obtener_tipo() {
         return TIPO;
     }
 
-    public void modificarProductoComida(Id identificador, String marca, String fabricante, String raza, String sabor,
-                                        String contenedor, String etapaDeVida, String tipo){
-        Object[] arregloProductos = productos.toArray();
+    //OPERACIONES BÁSICAS
+    public boolean modificar_producto_comida(Id identificador, String marca, String fabricante, String raza,
+                                             String sabor, String contenedor, String etapaDeVida, String tipo){
         try{
-            ProductoComida aModificar = (ProductoComida) arregloProductos[busquedaBinaria(arregloProductos,identificador)];
-            aModificar.establecerMarca(marca);
-            aModificar.establecerFabricante(fabricante);
-            aModificar.establecerRaza(raza);
-            aModificar.establecerSabor(sabor);
-            aModificar.establecerContenedor(contenedor);
-            aModificar.establecerEtapaDeVida(etapaDeVida);
-            aModificar.establecerTipo(tipo);
+            ProductoComida modificado = (ProductoComida) buscar_producto(identificador);
+            modificado.establecer_marca(marca);
+            modificado.establecer_fabricante(fabricante);
+            modificado.establecer_raza(raza);
+            modificado.establecer_sabor(sabor);
+            modificado.establecer_contenedor(contenedor);
+            modificado.establecer_etapa_de_vida(etapaDeVida);
+            modificado.establecer_tipo(tipo);
+            return true;
         }catch (Exception ex){
             JOptionPane.showMessageDialog(null,ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+            return false;
         }
     }
-
-    //VECTORIZAR PRODUCTO
-    public void vectorizarProducto(Producto aVectorizar){
-        vectorizarMarca((ProductoComida) aVectorizar);
-        vectorizarFabricante((ProductoComida) aVectorizar);
-        vectorizarRaza((ProductoComida) aVectorizar);
-        vectorizarSabor((ProductoComida) aVectorizar);
-        vectorizarContenedor((ProductoComida) aVectorizar);
-        vectorizarEtapaVida((ProductoComida) aVectorizar);
-        vectorizarTipo((ProductoComida) aVectorizar);
+    public void vectorizar_producto(Producto vectorizado){
+        vectorizar_marca((ProductoComida) vectorizado);
+        vectorizar_fabricante((ProductoComida) vectorizado);
+        vectorizar_raza((ProductoComida) vectorizado);
+        vectorizar_sabor((ProductoComida) vectorizado);
+        vectorizar_contenedor((ProductoComida) vectorizado);
+        vectorizar_etapa_de_vida((ProductoComida) vectorizado);
+        vectorizar_tipo((ProductoComida) vectorizado);
     }
 
     //METODOS AUXILIARES
-    private void vectorizarMarca(ProductoComida aVectorizar){
-        List<Integer> vector = aVectorizar.obtenerVector();
+    private void vectorizar_marca(ProductoComida aVectorizar){
+        List<Integer> vector = aVectorizar.obtener_vector();
         for(String m: MARCA){
-            if(aVectorizar.obtenerMarca().equals(m)){
+            if(aVectorizar.obtener_marca().equals(m)){
                 vector.add(1);
             }else{
                 vector.add(0);
             }
         }
     }
-    private void vectorizarFabricante(ProductoComida aVectorizar){
-        List<Integer> vector = aVectorizar.obtenerVector();
+    private void vectorizar_fabricante(ProductoComida aVectorizar){
+        List<Integer> vector = aVectorizar.obtener_vector();
         for(String f: FABRICANTE){
-            if(aVectorizar.obtenerFabricante().equals(f)){
+            if(aVectorizar.obtener_fabricante().equals(f)){
                 vector.add(1);
             }else{
                 vector.add(0);
             }
         }
     }
-    private void vectorizarRaza(ProductoComida aVectorizar){
-        List<Integer> vector = aVectorizar.obtenerVector();
+    private void vectorizar_raza(ProductoComida aVectorizar){
+        List<Integer> vector = aVectorizar.obtener_vector();
         for(String r: RAZA){
-            if(aVectorizar.obtenerRaza().equals(r)){
+            if(aVectorizar.obtener_raza().equals(r)){
                 vector.add(1);
             }else{
                 vector.add(0);
             }
         }
     }
-    private void vectorizarSabor(ProductoComida aVectorizar){
-        List<Integer> vector = aVectorizar.obtenerVector();
+    private void vectorizar_sabor(ProductoComida aVectorizar){
+        List<Integer> vector = aVectorizar.obtener_vector();
         for(String s: SABOR){
-            if(aVectorizar.obtenerSabor().equals(s)){
+            if(aVectorizar.obtener_sabor().equals(s)){
                 vector.add(1);
             }else {
                 vector.add(0);
             }
         }
     }
-    private void vectorizarContenedor(ProductoComida aVectorizar){
-        List<Integer> vector = aVectorizar.obtenerVector();
+    private void vectorizar_contenedor(ProductoComida aVectorizar){
+        List<Integer> vector = aVectorizar.obtener_vector();
         for(String c: CONTENEDOR){
-            if(aVectorizar.obtenerContenedor().equals(c)){
+            if(aVectorizar.obtener_contenedor().equals(c)){
                 vector.add(1);
             }else{
                 vector.add(0);
             }
         }
     }
-    private void vectorizarEtapaVida(ProductoComida aVectorizar){
-        List<Integer> vector = aVectorizar.obtenerVector();
+    private void vectorizar_etapa_de_vida(ProductoComida aVectorizar){
+        List<Integer> vector = aVectorizar.obtener_vector();
         for(String e: ETAPADEVIDA){
-            if(aVectorizar.obtenerEtapaDeVida().equals(e)){
+            if(aVectorizar.obtener_etapa_de_vida().equals(e)){
                 vector.add(1);
             }else{
                 vector.add(0);
             }
         }
     }
-    private void vectorizarTipo(ProductoComida aVectorizar){
-        List<Integer> vector = aVectorizar.obtenerVector();
+    private void vectorizar_tipo(ProductoComida aVectorizar){
+        List<Integer> vector = aVectorizar.obtener_vector();
         for(String t: TIPO){
-            if(aVectorizar.obtenerTipo().equals(t)){
+            if(aVectorizar.obtener_tipo().equals(t)){
                 vector.add(1);
             }else{
                 vector.add(0);
@@ -140,10 +144,10 @@ public class Comida extends Categoria {
         }
     }
 
-    public void insertarProductosDefecto(){
+    public void productos_por_defecto(){
         Random generador = new Random();
-        for(int i=0; i<30; i++){
-            String especie = ESPECIES[generador.nextInt(0,ESPECIES.length)];
+        for(int i=0; i<5; i++){
+            String especie = (String) MASCOTAS.keySet().toArray()[generador.nextInt(0,MASCOTAS.size())];
             String marca = MARCA[generador.nextInt(0,MARCA.length)];
             String fabricante = FABRICANTE[generador.nextInt(0,FABRICANTE.length)];
             String raza = RAZA[generador.nextInt(0,RAZA.length)];
@@ -157,14 +161,19 @@ public class Comida extends Categoria {
 
             String nombre = String.format("%s para %s %s con sabor a %s",
                     tipo,especie,etapaVida,sabor);
-            String descripcion = String.format("%s para %s %s,\nmarca %s,\nfabricante %s,\npara %s,\ncon sabor a %s " +
-                            "y\ncontenedor tipo %s.",
+            String descripcion = String.format("""
+                            %s para %s %s,
+                            marca %s,
+                            fabricante %s,
+                            para %s,
+                            con sabor a %s y
+                            contenedor tipo %s.""",
                     tipo,especie,etapaVida,marca,fabricante,raza,sabor,contenedor);
 
             ProductoComida productoComida= new ProductoComida("Comida",especie,nombre,precio,descuento,
                     stock,descripcion,marca,fabricante,raza,sabor,contenedor,etapaVida,tipo);
-            agregarProducto(productoComida);
-            vectorizarProducto(productoComida);
+            agregar_producto(0,productoComida);
+            vectorizar_producto(productoComida);
         }
     }
 }

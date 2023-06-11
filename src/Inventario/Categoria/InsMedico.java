@@ -1,4 +1,5 @@
 package Inventario.Categoria;
+
 import Producto.*;
 
 import javax.swing.*;
@@ -9,53 +10,68 @@ public class InsMedico extends Categoria{
     private final String[] MARCA = {"Healthy Paw Life", "Huggibles"};
     private final String[] FABRICANTE = {"Classic Agrimed LLC", "Gensavis Pharmaceuticals"};
     private final String[] TIPO = {"Antiparasitario", "Vitamina", "Probiotico"};
-    public InsMedico(){
-        insertarProductosDefecto();
+
+    //CONSTRUCTOR
+    public InsMedico(String[] mascotas){
+        super(mascotas);
+        productos_por_defecto();
     }
-    public void modificarProducto(Id identificador, String marca, String fabricante, String tipo) {
-        Object[] arregloProductos = productos.toArray();
+
+    //METODOS OBTENER
+    public String[] obtenerMarca(){
+        return this.MARCA;
+    }
+    public String[] obtenerFabricante(){
+        return this.FABRICANTE;
+    }
+    public String[] obtenerTipo(){
+        return this.TIPO;
+    }
+
+    //OPERACIONES BÁSICAS
+    public void modificarProductoInsMedico(Id identificador, String marca, String fabricante, String tipo) {
         try{
-            ProductoInsMedico aModificar = (ProductoInsMedico) arregloProductos[busquedaBinaria(arregloProductos,identificador)];
-            aModificar.establecerMarca(marca);
-            aModificar.establecerFabricante(fabricante);
-            aModificar.establecerTipo(tipo);
+            ProductoInsMedico modificado = (ProductoInsMedico) buscar_producto(identificador);
+            modificado.establecer_marca(marca);
+            modificado.establecer_fabricante(fabricante);
+            modificado.establecer_tipo(tipo);
         }catch (Exception ex){
             JOptionPane.showMessageDialog(null,ex.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
         }
     }
 
     //VECTORIZAR PRODUCTO
-    public void vectorizarProducto(Producto aVectorizar){
-        vectorizarMarca((ProductoInsMedico) aVectorizar);
-        vectorizarFabricante((ProductoInsMedico) aVectorizar);
-        vectorizarTipo((ProductoInsMedico) aVectorizar);
+    public void vectorizar_producto(Producto aVectorizar){
+        vectorizar_marca((ProductoInsMedico) aVectorizar);
+        vectorizar_fabricante((ProductoInsMedico) aVectorizar);
+        vectorizar_tipo((ProductoInsMedico) aVectorizar);
     }
 
     //METODOS AUXILIARES
-    private void vectorizarMarca(ProductoInsMedico aVectorizar){
-        List<Integer> vector = aVectorizar.obtenerVector();
+    private void vectorizar_marca(ProductoInsMedico aVectorizar){
+        List<Integer> vector = aVectorizar.obtener_vector();
         for(String m: MARCA){
-            if(aVectorizar.obtenerMarca().equals(m)){
+            if(aVectorizar.obtener_marca().equals(m)){
                 vector.add(1);
             }else{
                 vector.add(0);
             }
         }
     }
-    private void vectorizarFabricante(ProductoInsMedico aVectorizar){
-        List<Integer> vector = aVectorizar.obtenerVector();
+    private void vectorizar_fabricante(ProductoInsMedico aVectorizar){
+        List<Integer> vector = aVectorizar.obtener_vector();
         for(String f: FABRICANTE){
-            if(aVectorizar.obtenerFabricante().equals(f)){
+            if(aVectorizar.obtener_fabricante().equals(f)){
                 vector.add(1);
             }else{
                 vector.add(0);
             }
         }
     }
-    private void vectorizarTipo(ProductoInsMedico aVectorizar){
-        List<Integer> vector = aVectorizar.obtenerVector();
+    private void vectorizar_tipo(ProductoInsMedico aVectorizar){
+        List<Integer> vector = aVectorizar.obtener_vector();
         for(String t: TIPO){
-            if(aVectorizar.obtenerTipo().equals(t)){
+            if(aVectorizar.obtener_tipo().equals(t)){
                 vector.add(1);
             }else{
                 vector.add(0);
@@ -63,25 +79,29 @@ public class InsMedico extends Categoria{
         }
     }
 
-    public void insertarProductosDefecto() {
+    public void productos_por_defecto() {
         Random generador = new Random();
-        for (int i = 0; i < 10; i++) {
-            String texto = "";
-            String especie = ESPECIES[generador.nextInt(0, ESPECIES.length)];
+        for (int i = 0; i < 5; i++) {
+            String especie = (String) MASCOTAS.keySet().toArray()[generador.nextInt(0,MASCOTAS.size())];
             String marca = MARCA[generador.nextInt(0, MARCA.length)];
             String fabricante = FABRICANTE[generador.nextInt(0, FABRICANTE.length)];
             String tipo = TIPO[generador.nextInt(0, TIPO.length)];
             double precio = generador.nextDouble(1, 9.99);
             double descuento = generador.nextDouble(0, 0.40);
             int stock = generador.nextInt(1, 999);
-            for (int j = 0; j < 5; j++) {
-                char c = (char) (generador.nextInt(5) + 'a');
-                texto += c;
-            }
-            ProductoInsMedico productoInsMedico = new ProductoInsMedico("Insumo Médico", especie, texto,
-                    precio, descuento, stock, texto, marca, fabricante, tipo);
-            agregarProducto(productoInsMedico);
-            vectorizarProducto(productoInsMedico);
+
+            String nombre = String.format("%s para %s",
+                    tipo,especie);
+            String descripcion = String.format("""
+                            %s para %s,
+                            marca %s,
+                            fabricante %s.""",
+                    tipo,especie,marca,fabricante);
+
+            ProductoInsMedico productoInsMedico = new ProductoInsMedico("Insumo médico",especie,nombre,
+                    precio,descuento,stock,descripcion,marca,fabricante,tipo);
+            agregar_producto(2,productoInsMedico);
+            vectorizar_producto(productoInsMedico);
         }
     }
 }
