@@ -1,13 +1,15 @@
 package Producto;
 
 public class ProductoComida extends Producto{
-    String marca;
-    String fabricante;
-    String raza;
-    String sabor;
-    String contenedor;
-    String etapaVida;
-    String tipo;
+    private String marca;
+    private String fabricante;
+    private String raza;
+    private String sabor;
+    private String contenedor;
+    private String etapaVida;
+    private String tipo;
+
+    //CONSTRUCTOR
     public ProductoComida(String categoria, String especie, String nombre, double precio, double descuento, int stock,
                           String descripcion, String marca, String fabricante, String raza, String sabor,
                           String contenedor, String etapaVida, String tipo){
@@ -22,57 +24,53 @@ public class ProductoComida extends Producto{
     }
 
     //METODOS ESTABLECER
-    public void establecerMarca(String marca){
+    public void establecer_marca(String marca){
         this.marca = marca;
     }
-    public void establecerFabricante(String fabricante){
+    public void establecer_fabricante(String fabricante){
         this.fabricante = fabricante;
     }
-    public void establecerRaza(String raza){
+    public void establecer_raza(String raza){
         this.raza = raza;
     }
-    public void establecerSabor(String sabor){
+    public void establecer_sabor(String sabor){
         this.sabor = sabor;
     }
-    public void establecerContenedor(String contenedor){
+    public void establecer_contenedor(String contenedor){
         this.contenedor = contenedor;
     }
-    public void establecerEtapaDeVida(String etapaVida){
+    public void establecer_etapa_de_vida(String etapaVida){
         this.etapaVida = etapaVida;
     }
-    public void establecerTipo(String tipo){
+    public void establecer_tipo(String tipo){
         this.tipo = tipo;
     }
 
     //METODOS OBTENER
-    public String obtenerMarca(){
+    public String obtener_marca(){
         return this.marca;
     }
-    public String obtenerFabricante(){
+    public String obtener_fabricante(){
         return this.fabricante;
     }
-    public String obtenerRaza(){
+    public String obtener_raza(){
         return this.raza;
     }
-    public String obtenerSabor(){
+    public String obtener_sabor(){
         return this.sabor;
     }
-    public String obtenerContenedor(){
+    public String obtener_contenedor(){
         return this.contenedor;
     }
-    public String obtenerEtapaDeVida(){
+    public String obtener_etapa_de_vida(){
         return this.etapaVida;
     }
-    public String obtenerTipo(){
+    public String obtener_tipo(){
         return this.tipo;
     }
-    public Object[] obtenerAtributosGenerales(){
-        return new Object[] {obtenerId().toString(), obtenerNombre(), obtenerEspecie(),obtenerPrecio(),
-                obtenerDescuento(), obtenerStock(), obtenerUnVenidas(), obtenerCalificacion(), obtenerDescripcion()};
-    }
-    public Object[] obtenerAtributosEspecificos(){
-        return new Object[] {obtenerId().toString(), this.marca, this.fabricante, this.raza, this.sabor, this.contenedor
+
+    public Object[] obtener_atributos_especificos(){
+        return new Object[] {obtener_id().toString(), this.marca, this.fabricante, this.raza, this.sabor, this.contenedor
                 , this.etapaVida, this.tipo};
     }
-
 }

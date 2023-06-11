@@ -1,10 +1,7 @@
-import Inventario.Categoria.Accesorio;
-import Inventario.Categoria.Comida;
-import Inventario.Categoria.InsMedico;
+import Inventario.Categoria.*;
 import Inventario.Inventario;
 import Producto.Producto;
 import SistemaDeCompras.ClasesDelSistema.Carrito;
-import SistemaDeCompras.ClasesDelSistema.Filtros;
 import SistemaDeCompras.ClasesDelSistema.HistorialCompras;
 import SistemaDeCompras.DocumentFilter.FilterFormat;
 import Producto.*;
@@ -77,11 +74,11 @@ public class VentanaCompra {
         }
     };
     private Carrito carrito = new Carrito(new Inventario());
-    private Filtros filtroTable = new Filtros();
     private HistorialCompras historialCompras = new HistorialCompras();
     List<Producto> productosEnCarro = new ArrayList<>();
     private DefaultListModel<String>  listModel = new DefaultListModel<>();
     private Inventario inventario = new Inventario();
+    private Categoria categoria;
     private List<JTextField> textFieldProductosCompras = Arrays.asList(textFieldProducto0, textFieldProducto1, textFieldProducto2,
             textFieldProducto3, textFieldProducto4, textFieldProducto5, textFieldProducto6);
     private List<JTextField> textFieldCantidadPorProducto = Arrays.asList(textFieldProductoCantidad0, textFieldProductoCantidad1,
@@ -124,7 +121,7 @@ public class VentanaCompra {
                 try {
                     Id identificador = new Id(id);
                     inicializarTabla();
-                    actualizarTabla(new Object[] {filtroTable.buscarProductoPorId(identificador)});
+                    actualizarTabla(new Object[] {(categoria.buscar_producto(identificador))});
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -148,7 +145,7 @@ public class VentanaCompra {
                 }
 
                 listModel.clear(); // Se restablece el contenido del DefaultListModel antes de agregar los nuevos elementos
-                listModel.addElement(carrito.getProductos().get(carrito.size() - 1).obtenerNombre() + " Cantidad: " + spinnerCantidadP.getValue().toString());
+                listModel.addElement(carrito.getProductos().get(carrito.size() - 1).obtener_nombre() + " Cantidad: " + spinnerCantidadP.getValue().toString());
 
                 listProductosEnCarro.setModel(listModel);
             }
@@ -329,7 +326,7 @@ public class VentanaCompra {
             public void actionPerformed(ActionEvent e) {
                 String id = textFieldID.getText();
                 try {
-                    Producto producto = filtroTable.buscarProductoPorId(new Id(id));
+                    Producto producto = categoria.buscar_producto(new Id(id));
                     String datos;
 
                     datos = (producto instanceof ProductoAccesorio)? obtenerDatosAccesorios(producto) :
@@ -373,8 +370,8 @@ public class VentanaCompra {
 
     public Object[] obtenerAtributosProductos(Object o) {
         Producto producto = (Producto) o;
-        return new Object[] { producto.obtenerId(), producto.obtenerNombre(), producto.obtenerPrecio(),
-                producto.obtenerDescuento(), producto.obtenerCalificacion()
+        return new Object[] { producto.obtener_id(), producto.obtener_nombre(), producto.obtener_precio(),
+                producto.obtener_descuento(), producto.obtener_calificacion()
         };
     }
 
@@ -382,7 +379,7 @@ public class VentanaCompra {
         List<Producto> productosEnCarro = carrito.getProductos();
 
         for(int i = 0; i < productosEnCarro.size(); ++i) {
-            textFieldProductosCompras.get(i).setText(productosEnCarro.get(i).obtenerNombre());
+            textFieldProductosCompras.get(i).setText(productosEnCarro.get(i).obtener_nombre());
             textFieldCantidadPorProducto.get(i).setText(Integer.toString(carrito.obtenerCantidadEnCarro(productosEnCarro.get(i))));
         }
     }
@@ -402,6 +399,14 @@ public class VentanaCompra {
         textFieldID = new FilterFormat().filterFormatField(5, "[0-9]*");
     }
 
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("VentanaCompra");
+        frame.setContentPane(new VentanaCompra().panel1);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
+    }
+
     public String obtenerDatosAccesorios(Producto producto) {
         String accesorioFormat = "Nombre: %s\n" + "Especie: %s\n" + "Precio: %.2f\n" +
                 "Descuento: %.2f\n" + "Marca: %s\n" + "Fabricante: %s\n" +
@@ -409,9 +414,9 @@ public class VentanaCompra {
                 "Descripción: %d\n";
 
         ProductoAccesorio p = (ProductoAccesorio) producto;
-        return String.format(accesorioFormat, p.obtenerNombre(), p.obtenerEspecie(), p.obtenerPrecio(),
-                p.obtenerDescuento(), p.obtenerMarca(), p.obtenerFabricante(), p.obtenerTipo(),
-                p.obtenerEtapaDeVida(), p.obtenerCalificacion(), p.obtenerDescripcion());
+        return String.format(accesorioFormat, p.obtener_nombre(), p.obtener_mascota(), p.obtener_precio(),
+                p.obtener_descuento(), p.obtener_marca(), p.obtener_fabricante(), p.obtener_tipo(),
+                p.obtener_etapa_de_vida(), p.obtener_calificacion(), p.obtener_descripcion());
     }
 
     public String obtenerDatosMedicamentos(Producto producto) {
@@ -421,9 +426,9 @@ public class VentanaCompra {
 
 
         ProductoInsMedico p = (ProductoInsMedico) producto;
-        return String.format(insMedicoFormat, p.obtenerNombre(), p.obtenerEspecie(), p.obtenerPrecio(),
-                p.obtenerDescuento(), p.obtenerMarca(), p.obtenerFabricante(), p.obtenerTipo(),
-                p.obtenerCalificacion(), p.obtenerDescripcion());
+        return String.format(insMedicoFormat, p.obtener_nombre(), p.obtener_mascota(), p.obtener_precio(),
+                p.obtener_descuento(), p.obtener_marca(), p.obtener_fabricante(), p.obtener_tipo(),
+                p.obtener_calificacion(), p.obtener_descripcion());
     }
 
     public String obtenerDatosComida(Producto producto) {
@@ -434,21 +439,21 @@ public class VentanaCompra {
 
 
         ProductoComida p = (ProductoComida) producto;
-        return String.format(comidaFormat, p.obtenerNombre(), p.obtenerEspecie(), p.obtenerPrecio(),
-                p.obtenerDescuento(), p.obtenerMarca(), p.obtenerFabricante(), p.obtenerRaza(), p.obtenerSabor(),
-                p.obtenerContenedor(), p.obtenerEtapaDeVida(), p.obtenerCalificacion(), p.obtenerDescripcion());
+        return String.format(comidaFormat, p.obtener_nombre(), p.obtener_mascota(), p.obtener_precio(),
+                p.obtener_descuento(), p.obtener_marca(), p.obtener_fabricante(), p.obtener_raza(), p.obtener_sabor(),
+                p.obtener_contenedor(), p.obtener_etapa_de_vida(), p.obtener_calificacion(), p.obtener_descripcion());
 
     }
 
     public Object[] filtrar(String categoria, String raza, String filtro) {
         Object[] list;
         if(raza.compareToIgnoreCase("Ninguno") == 0) {
-            list = (categoria.compareToIgnoreCase("Comida") == 0)? new Comida[]{inventario.obtenerCatComida()} :
-                    (categoria.compareToIgnoreCase("Accesorios") == 0)? new Accesorio[]{inventario.obtenerCatAccesorio()} : new InsMedico[]{inventario.obtenerCatInsMedico()};
+            list = (categoria.compareToIgnoreCase("Comida") == 0)? new Comida[]{inventario.obtener_categoria_comida()} :
+                    (categoria.compareToIgnoreCase("Accesorios") == 0)? new Accesorio[]{inventario.obtener_categoria_accesorio()} : new InsMedico[]{inventario.obtener_insumo_medico()};
         } else {
-            list = (categoria.compareToIgnoreCase("Comida") == 0)? inventario.obtenerCatComida().filtrarEspecieMascota(raza) :
-                    (categoria.compareToIgnoreCase("Accesorios") == 0)? inventario.obtenerCatAccesorio().filtrarEspecieMascota(raza) :
-                            inventario.obtenerCatInsMedico().filtrarEspecieMascota(raza);
+            list = (categoria.compareToIgnoreCase("Comida") == 0)? inventario.obtener_categoria_comida().filtrar_por_mascota(raza) :
+                    (categoria.compareToIgnoreCase("Accesorios") == 0)? inventario.obtener_categoria_accesorio().filtrar_por_mascota(raza) :
+                            inventario.obtener_insumo_medico().filtrar_por_mascota(raza);
         }
 
         ordenarTodosLosProductos(list, filtro);
@@ -457,59 +462,59 @@ public class VentanaCompra {
     }
 
     private void ordenarTodosLosProductos(Object[] productos, String filtro) { //Se puede añadir la categoria que desea buscar
-        Object[] obj = new Object[] {productos};
-
-        switch (filtro) {
-            case "Precio" -> {
-                if (productos instanceof ProductoAccesorio[]) {
-                    inventario.obtenerCatAccesorio().ordenarPorPrecio(obj);
-                } else if (productos instanceof  ProductoComida[]) {
-                    inventario.obtenerCatComida().ordenarPorPrecio(obj);
-                } else {
-                    inventario.obtenerCatInsMedico().ordenarPorPrecio(obj);
-                }
-            } case "Stock" -> {
-                if(productos instanceof  ProductoAccesorio[]) {
-                    inventario.obtenerCatAccesorio().ordenarPorStock(obj);
-                } else if (productos instanceof  ProductoComida[]) {
-                    inventario.obtenerCatComida().ordenarPorStock(obj);
-                } else {
-                    inventario.obtenerCatInsMedico().ordenarPorStock(obj);
-                }
-            } case "Unidades Vendidas" -> {
-                if(productos instanceof  ProductoAccesorio[]) {
-                    inventario.obtenerCatAccesorio().ordenarUnVendidas(obj);
-                } else if(productos instanceof  ProductoComida[]) {
-                    inventario.obtenerCatComida().ordenarUnVendidas(obj);
-                } else {
-                    inventario.obtenerCatInsMedico().ordenarUnVendidas(obj);
-                }
-            } case "Calificación" -> {
-                if(productos instanceof ProductoAccesorio[]) {
-                    inventario.obtenerCatAccesorio().ordenarCalificacion(obj);
-                } else if(productos instanceof  ProductoComida[]) {
-                    inventario.obtenerCatComida().ordenarCalificacion(obj);
-                } else {
-                    inventario.obtenerCatInsMedico().ordenarCalificacion(obj);
-                }
-            }
+        if(filtro.compareTo("Precio") == 0) {
+            ordenarProductosPorPrecio(productos);
+        } else if(filtro.compareTo("Stock") == 0) {
+            ordenarProductosPorStock(productos);
+        } else if(filtro.compareTo("Unidades Vendidas") == 0) {
+            ordenarProductosPorUnidadesVendidas(productos);
+        } else {
+            ordenarProductosPorCalificacion(productos);
         }
+    }
+
+    private void ordenarProductosPorPrecio(Object[] productos) {
+        if (productos instanceof ProductoAccesorio[])
+            inventario.obtener_categoria_comida().ordenar_por_precio(productos);
+        else if (productos instanceof  ProductoComida[])
+            inventario.obtener_categoria_comida().ordenar_por_precio(productos);
+        else
+            inventario.obtener_insumo_medico().ordenar_por_precio(productos);
+    }
+
+    private void ordenarProductosPorStock(Object[] productos) {
+        if(productos instanceof  ProductoAccesorio[])
+            inventario.obtener_categoria_comida().ordenar_por_stock(productos);
+        else if (productos instanceof  ProductoComida[])
+            inventario.obtener_categoria_comida().ordenar_por_stock(productos);
+        else
+            inventario.obtener_insumo_medico().ordenar_por_stock(productos);
+    }
+
+    private void ordenarProductosPorUnidadesVendidas(Object[] productos) {
+        if(productos instanceof  ProductoAccesorio[])
+            inventario.obtener_categoria_comida().ordenar_por_unidades_vendidas(productos);
+        else if(productos instanceof  ProductoComida[])
+            inventario.obtener_categoria_comida().ordenar_por_unidades_vendidas(productos);
+        else
+            inventario.obtener_insumo_medico().ordenar_por_unidades_vendidas(productos);
+    }
+
+    private void ordenarProductosPorCalificacion(Object[] productos) {
+        if(productos instanceof ProductoAccesorio[])
+            inventario.obtener_categoria_comida().ordenar_por_calificacion(productos);
+        else if(productos instanceof  ProductoComida[])
+            inventario.obtener_categoria_comida().ordenar_por_calificacion(productos);
+        else
+            inventario.obtener_insumo_medico().ordenar_por_calificacion(productos);
     }
 
 
     public Object[] obtenerTodosLosProductos() {
         List<Object> list = new ArrayList<>();
-        list.addAll(List.of(inventario.obtenerCatComida()));
-        list.addAll(List.of(inventario.obtenerCatAccesorio()));
-        list.addAll(List.of(inventario.obtenerCatInsMedico()));
+        list.addAll(List.of(inventario.obtener_categoria_comida()));
+        list.addAll(List.of(inventario.obtener_categoria_accesorio()));
+        list.addAll(List.of(inventario.obtener_insumo_medico()));
         return list.toArray();
-    }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("VentanaCompra");
-        frame.setContentPane(new VentanaCompra().panel1);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
     }
 }
